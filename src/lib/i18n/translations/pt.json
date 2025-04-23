@@ -1,0 +1,13 @@
+{
+  "home": {
+    "title": "Blog de Tecnologia do Gabriel",
+    "subtitle": "Reflexões sobre código, tecnologia e desenvolvimento de software"
+  },
+  "common": {
+    "minRead": "min de leitura",
+    "readMore": "Leia mais",
+    "noPostsYet": "Ainda não há posts. Volte em breve!",
+    "footer": "© {year} Gabriel Olv. Todos os direitos reservados.",
+    "backToHome": "Voltar para o início"
+  }
+}

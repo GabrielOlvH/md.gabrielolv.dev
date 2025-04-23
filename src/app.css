@@ -1,2 +1,321 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+@import 'highlight.js/styles/atom-one-dark.css';
+
+:root {
+  /* Improved colors with much better contrast for light theme */
+  --color-primary: #0c5010; /* Much darker green for better contrast */
+  --color-primary-dark: #073b09; /* Even darker green for hover states */
+  --color-text: #111111; /* Almost black text for maximum readability */
+  --color-text-muted: #3d4852; /* Much darker muted text */
+  --color-text-bold: #000000; /* Pure black for bold text */
+  --color-heading: #000000; /* Pure black for headings */
+  --color-border: #a0d8a0; /* Darker green border */
+  --color-code: #b71c1c; /* Very dark red for inline code */
+  --color-code-bg: #e8f5e9; /* Slightly darker background for inline code */
+  --color-code-block: #f8fafc; /* Light text for code blocks */
+  --color-code-block-bg: #1e293b; /* Dark background for code blocks */
+  --color-background: #f8fbf8; /* Very light green tint for background */
+  --color-card-bg: #ffffff; /* White background for cards */
+  --color-accent: #2e7d32; /* Darker medium green for accents */
+}
+
+.dark {
+  --color-primary: #4caf50; /* Brighter green for dark mode */
+  --color-primary-dark: #2e7d32; /* Darker green for hover in dark mode */
+  --color-text: #e0e0e0; /* Light text for dark mode */
+  --color-text-muted: #b0b0b0; /* Muted text with better contrast */
+  --color-text-bold: #ffffff; /* White for bold text */
+  --color-heading: #ffffff; /* White for headings */
+  --color-border: #2c4a2c; /* Dark green border */
+  --color-code: #ff8a80; /* Lighter red for code in dark mode */
+  --color-code-bg: #1e3b1e; /* Dark green background for inline code */
+  --color-code-block: #f8fafc; /* Light text for code blocks */
+  --color-code-block-bg: #0f1a0f; /* Very dark green for code blocks */
+  --color-background: #0f1a0f; /* Very dark green background */
+  --color-card-bg: #1a2e1a; /* Darker green for cards */
+  --color-accent: #66bb6a; /* Lighter green for accents */
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
+  line-height: 1.6; /* Improved readability */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 25px 25px, var(--color-accent) 2%, transparent 0%),
+    radial-gradient(circle at 75px 75px, var(--color-accent) 2%, transparent 0%);
+  background-size: 100px 100px;
+  opacity: 0.05;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Animated background gradient */
+.bg-gradient-animation {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, 
+                             rgba(46, 125, 50, 0.03) 0%, 
+                             rgba(27, 94, 32, 0.01) 50%, 
+                             rgba(0, 0, 0, 0) 100%);
+  animation: rotate 60s linear infinite;
+  z-index: -2;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.dark .bg-gradient-animation {
+  background: radial-gradient(circle at center, 
+                             rgba(76, 175, 80, 0.05) 0%, 
+                             rgba(46, 125, 50, 0.03) 50%, 
+                             rgba(0, 0, 0, 0) 100%);
+}
+
+.content-container {
+  background-color: var(--color-card-bg);
+  padding: 1.5rem; /* More padding */
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+}
+
+.prose {
+  color: var(--color-text) !important;
+}
+
+.prose p, .prose li, .prose blockquote {
+  color: var(--color-text) !important;
+}
+
+.prose strong {
+  color: var(--color-text-bold) !important;
+  font-weight: 700;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: var(--color-heading) !important;
+  font-weight: 700;
+}
+
+.prose a {
+  text-decoration: none;
+  color: var(--color-primary) !important;
+  font-weight: 600; /* Make links bolder */
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.prose a:hover {
+  color: var(--color-primary-dark) !important;
+}
+
+.prose a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease;
+}
+
+.prose a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Site title styling */
+.site-title {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+/* Custom code block styling to match our theme */
+.hljs {
+  background: #282c34 !important;
+  border-radius: 0.75rem;
+  padding: 1rem !important;
+  margin: 1.5rem 0;
+  color: #abb2bf !important;
+  border: 1px solid #3e4451;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure code blocks have proper padding and scrolling */
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem !important;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+/* Improved syntax highlighting colors for better contrast */
+.hljs-keyword {
+  color: #c678dd !important; /* Purple for keywords */
+}
+
+.hljs-string {
+  color: #98c379 !important; /* Green for strings */
+}
+
+.hljs-comment {
+  color: #7f848e !important; /* Gray for comments */
+}
+
+.hljs-function {
+  color: #61afef !important; /* Blue for functions */
+}
+
+.hljs-number {
+  color: #d19a66 !important; /* Orange for numbers */
+}
+
+.hljs-tag {
+  color: #e06c75 !important; /* Red for tags */
+}
+
+.hljs-name {
+  color: #e5c07b !important; /* Yellow for names */
+}
+
+.hljs-attr {
+  color: #d19a66 !important; /* Orange for attributes */
+}
+
+.hljs-title {
+  color: #61afef !important; /* Blue for titles */
+}
+
+.hljs-class {
+  color: #e5c07b !important; /* Yellow for classes */
+}
+
+/* Dark mode adjustments for code highlighting */
+.dark .hljs {
+  background: #282c34 !important;
+  border-color: #3e4451;
+}
+
+/* Card styling */
+.card {
+  background-color: var(--color-card-bg);
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Tag styling */
+.tag {
+  background-color: rgba(12, 80, 16, 0.1);
+  color: var(--color-primary);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.tag:hover {
+  background-color: rgba(12, 80, 16, 0.2);
+}
+
+.dark .tag {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: var(--color-accent);
+}
+
+.dark .tag:hover {
+  background-color: rgba(76, 175, 80, 0.25);
+}
+
+/* Button styling */
+.btn {
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  font-weight: 600;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* Improved mobile responsiveness */
+@media (max-width: 640px) {
+  .content-container {
+    padding: 1.25rem 1rem;
+    border-radius: 0.75rem;
+  }
+  
+  .hljs {
+    padding: 0.75rem !important;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Better focus styles for accessibility */
+a:focus, button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

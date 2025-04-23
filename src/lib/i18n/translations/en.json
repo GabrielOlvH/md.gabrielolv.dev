@@ -1,0 +1,13 @@
+{
+  "home": {
+    "title": "Gabriel's Tech Blog",
+    "subtitle": "Thoughts on code, technology, and software development"
+  },
+  "common": {
+    "minRead": "min read",
+    "readMore": "Read more",
+    "noPostsYet": "No posts yet. Check back soon!",
+    "footer": " {year} Gabriel Olv. All rights reserved.",
+    "backToHome": "Back to home"
+  }
+}
