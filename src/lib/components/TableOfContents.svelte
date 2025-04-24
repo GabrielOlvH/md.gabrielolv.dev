@@ -79,19 +79,6 @@
             }
           }
         }
-      } else {
-        // If no active heading, show all h2 and first h3 under each h2
-        $tocItems.forEach(item => {
-          if (item.level === 2) {
-            expandedIds.add(item.id);
-            
-            // Find first h3 under this h2
-            const firstH3 = $tocItems.find(h3 => h3.parentId === item.id && h3.level === 3);
-            if (firstH3) {
-              expandedIds.add(firstH3.id);
-            }
-          }
-        });
       }
       
       return expandedIds;

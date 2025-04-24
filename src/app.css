@@ -4,20 +4,20 @@
 
 /* Dark mode styles (now default) */
 :root {
-  --color-primary: #2e7d32;
-  --color-primary-dark: #0c5010;
-  --color-text: #e0e0e0;
-  --color-text-muted: #b0b0b0;
+  --color-primary: #9ed9a0;
+  --color-primary-dark: #7eba80;
+  --color-text: #edf5ee;
+  --color-text-muted: #d0e2d2;
   --color-text-bold: #ffffff;
-  --color-heading: #ffffff;
-  --color-border: #2c4a2c;
-  --color-code: #ff8a80;
-  --color-code-bg: #1e3b1e;
+  --color-heading: #f5faf6;
+  --color-border: #a8cba9;
+  --color-code: #ffc7c2;
+  --color-code-bg: #3e5c3f;
   --color-code-block: #f8fafc;
-  --color-code-block-bg: #0f1a0f;
-  --color-background: #0a1a0a;
-  --color-card-bg: #112211;
-  --color-accent: #66bb6a;
+  --color-code-block-bg: #263c27;
+  --color-background: #1c3a1e;
+  --color-card-bg: #2a452c;
+  --color-accent: #bce6bd;
 }
 
 body {
@@ -42,7 +42,7 @@ body::before {
     radial-gradient(circle at 25px 25px, var(--color-accent) 2%, transparent 0%),
     radial-gradient(circle at 75px 75px, var(--color-accent) 2%, transparent 0%);
   background-size: 100px 100px;
-  opacity: 0.05;
+  opacity: 0.03;
   z-index: -1;
   pointer-events: none;
 }
@@ -55,8 +55,8 @@ body::before {
   width: 200%;
   height: 200%;
   background: radial-gradient(circle at center,
-                             rgba(76, 175, 80, 0.05) 0%,
-                             rgba(46, 125, 50, 0.03) 50%,
+                             rgba(188, 230, 189, 0.04) 0%,
+                             rgba(158, 217, 160, 0.02) 50%,
                              rgba(0, 0, 0, 0) 100%);
   animation: rotate 60s linear infinite;
   z-index: -2;
@@ -79,7 +79,7 @@ body::before {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: rgba(76, 175, 80, 0.2);
+  background: rgba(188, 230, 189, 0.15);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -131,7 +131,7 @@ body::before {
 /* Glowing lines */
 .glow-line {
   position: fixed;
-  background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(188, 230, 189, 0.15), transparent);
   height: 1px;
   width: 100%;
   z-index: -4;
@@ -191,15 +191,15 @@ body::before {
   background-color: var(--color-card-bg);
   padding: 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(188, 230, 189, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .content-container:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(76, 175, 80, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(188, 230, 189, 0.1);
 }
 
 /* Prose styles */
@@ -354,30 +354,30 @@ pre code.hljs {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.05) 0%, transparent 50%);
+  background: linear-gradient(135deg, rgba(188, 230, 189, 0.04) 0%, transparent 50%);
   z-index: 0;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(76, 175, 80, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 20px rgba(188, 230, 189, 0.1);
 }
 
 /* Tag styling */
 .tag {
-  background-color: rgba(76, 175, 80, 0.15);
+  background-color: rgba(188, 230, 189, 0.12);
   color: var(--color-accent);
   border-radius: 9999px;
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   font-weight: 600;
   transition: all 0.2s ease;
-  border: 1px solid rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(188, 230, 189, 0.15);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .tag:hover {
-  background-color: rgba(76, 175, 80, 0.25);
+  background-color: rgba(188, 230, 189, 0.2);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -433,7 +433,7 @@ pre code.hljs {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(188, 230, 189, 0.15), transparent);
   transition: left 0.5s ease;
   z-index: -1;
 }
