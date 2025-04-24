@@ -1,5 +1,5 @@
 ---
-title: "React & Next.js vs Svelte: Teste"
+title: React & Next.js vs Svelte
 date: 2025-04-23
 tags:
   - React
