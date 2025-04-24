@@ -146,8 +146,17 @@
     return breadcrumbs;
   }
 
-  $: dirContent = getCurrentDirContent();
-  $: breadcrumbs = getBreadcrumbs();
+  let dirContent = [];
+  let breadcrumbs = [];
+  
+  // Initialize and update when locale or path changes
+  $: {
+    locale;
+    currentPath;
+    dirContent = getCurrentDirContent();
+    breadcrumbs = getBreadcrumbs();
+  }
+  
   $: isRootDir = currentPath === `/${locale}`;
 </script>
 

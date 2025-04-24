@@ -48,6 +48,9 @@
   $: {
     if (posts && posts.length > 0) {
       const postsDir = fileSystem['/'].children['posts'];
+      // Clear existing posts first to prevent stale data
+      postsDir.children = {};
+      
       posts.forEach(post => {
         postsDir.children[`${post.slug}.md`] = {
           type: 'file',
@@ -119,7 +122,7 @@
   function navigateTo(path) {
     // If it's a file with a URL, navigate to that URL
     if (path.type === 'file' && path.url) {
-      window.open(path.url, '_blank');
+      goto(path.url);
       return;
     }
     
@@ -168,10 +171,20 @@
     return breadcrumbs;
   }
 
+  let dirContent = [];
+  let breadcrumbs = [];
+  
+  // Initialize and update when locale, posts, or path changes
+  $: {
+    currentLocale;
+    posts;
+    currentPath;
+    dirContent = getCurrentDirContent();
+    breadcrumbs = getBreadcrumbs();
+  }
+  
   // Check if we're in the posts directory
   $: isPostsDirectory = currentPath.includes(`/${currentLocale}/posts`) && !currentPath.split('/').slice(3).join('/');
-  $: dirContent = getCurrentDirContent();
-  $: breadcrumbs = getBreadcrumbs();
   $: isRootDir = currentPath === `/${currentLocale}`;
 </script>
 
