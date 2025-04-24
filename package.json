@@ -47,5 +47,8 @@
 		"marked": "^15.0.10",
 		"marked-highlight": "^2.2.1",
 		"sass-embedded": "^1.87.0"
+	},
+	"optionalDependencies": {
+		"@rollup/rollup-linux-x64-gnu": "4.40.0"
 	}
 }

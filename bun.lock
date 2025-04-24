@@ -36,6 +36,9 @@
         "vite": "^6.3.2",
         "wrangler": "^4.13.0",
       },
+      "optionalDependencies": {
+        "@rollup/rollup-linux-x64-gnu": "4.40.0",
+      },
     },
   },
   "packages": {
@@ -198,6 +201,8 @@
     "@nodelib/fs.walk": ["@nodelib/fs.walk@1.2.8", "", { "dependencies": { "@nodelib/fs.scandir": "2.1.5", "fastq": "^1.6.0" } }, ""],
 
     "@polka/url": ["@polka/url@1.0.0-next.29", "", {}, ""],
+
+    "@rollup/rollup-linux-x64-gnu": ["@rollup/rollup-linux-x64-gnu@4.40.0", "", { "os": "linux", "cpu": "x64" }, "sha512-RcDGMtqF9EFN8i2RYN2W+64CdHruJ5rPqrlYw+cgM3uOVPSsnAQps7cpjXe9be/yDp8UC7VLoCoKC8J3Kn2FkQ=="],
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.40.0", "", { "os": "win32", "cpu": "x64" }, ""],
 
