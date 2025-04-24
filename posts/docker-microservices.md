@@ -1,8 +1,13 @@
 ---
-title: "Building Microservices with Docker and Kubernetes"
-date: "2025-04-10"
-tags: ["Docker", "Kubernetes", "Microservices", "DevOps", "Cloud"]
-excerpt: "Learn how to design, deploy, and manage microservices using Docker containers and Kubernetes orchestration."
+title: Building Microservices with Docker and Kubernetes
+date: 2025-04-10
+tags:
+  - Docker
+  - Kubernetes
+  - Microservices
+  - DevOps
+  - Cloud
+excerpt: Learn how to design, deploy, and manage microservices using Docker containers and Kubernetes orchestration.
 ---
 
 # Building Microservices with Docker and Kubernetes
