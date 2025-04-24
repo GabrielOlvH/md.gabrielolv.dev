@@ -11,8 +11,8 @@
 
 <main class="max-w-3xl mx-auto px-4 sm:px-8 py-8 sm:py-10 min-h-screen content-container rounded-lg shadow-md">
   <header class="mb-12 sm:mb-16 text-center">
-    <h1 class="text-3xl sm:text-4xl font-bold mb-3 site-title">md.gabrielolv.dev</h1>
-    <p class="text-slate-600 dark:text-slate-300 font-light">{$t('home.subtitle')}</p>
+    <h1 class="text-3xl sm:text-4xl font-bold mb-4 site-title">md.gabrielolv.dev</h1>
+    <p class="text-gray-100 text-lg font-medium">{$t('home.subtitle')}</p>
   </header>
   
   <section>
@@ -23,13 +23,13 @@
         {/each}
       </div>
     {:else}
-      <div class="text-center py-12 px-4 sm:px-6 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800/50">
-        <p class="text-slate-600 dark:text-slate-300">{$t('common.noPostsYet')}</p>
+      <div class="text-center py-12 px-4 sm:px-6 rounded-xl bg-green-900/20 border border-green-800/50">
+        <p class="text-gray-100 font-medium">{$t('common.noPostsYet')}</p>
       </div>
     {/if}
   </section>
   
-  <footer class="mt-16 sm:mt-20 pt-6 sm:pt-8 border-t border-green-100 dark:border-green-800/50 text-center text-slate-500 dark:text-slate-400 text-sm">
+  <footer class="mt-16 sm:mt-20 pt-6 sm:pt-8 border-t border-green-800/50 text-center text-gray-400 text-sm">
     <p>{$t('common.footer', { year: currentYear.toString() })}</p>
   </footer>
 </main>

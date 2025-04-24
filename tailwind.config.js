@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
+  darkMode: 'class',
   theme: {
     extend: {
       typography: {
@@ -76,5 +77,4 @@ export default {
   plugins: [
     require('@tailwindcss/typography'),
   ],
-  darkMode: 'class',
 };
