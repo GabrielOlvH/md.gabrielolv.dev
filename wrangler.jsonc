@@ -11,6 +11,9 @@
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
 	"observability": {
 		"enabled": true
 	}
