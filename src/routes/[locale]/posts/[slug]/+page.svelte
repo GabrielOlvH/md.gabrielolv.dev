@@ -3,6 +3,8 @@
   import { page } from '$app/stores';
   import PostLanguageSwitcher from '$lib/components/PostLanguageSwitcher.svelte';
   import TableOfContents from '$lib/components/TableOfContents.svelte';
+  import FileExplorer from '$lib/components/FileExplorer.svelte';
+  import SEO from '$lib/components/SEO.svelte';
   import type { PageData } from './$types';
   
   export let data: PageData;
@@ -13,10 +15,14 @@
   $: formattedDate = formatDate(new Date(post.date), $page.params.locale);
 </script>
 
-<svelte:head>
-  <title>{post.title} | Gabriel's Blog</title>
-  <meta name="description" content={post.excerpt} />
-</svelte:head>
+<SEO 
+  title={`${post.title} | Gabriel's Blog`}
+  description={post.excerpt}
+  type="article"
+  image={post.coverImage || '/images/og-image.jpg'}
+  publishedTime={post.date}
+  tags={post.tags}
+/>
 
 <!-- Main container with centered content -->
 <div class="relative">
@@ -47,20 +53,11 @@
       
       <!-- Main content (centered) -->
       <div class="content-container rounded-lg shadow-md p-6 sm:p-8">
+        <!-- File Explorer Navigation -->
+        <FileExplorer />
+        
         <article>
           <header class="mb-8">
-            <div class="mb-6">
-              <a 
-                href="/{$page.params.locale}" 
-                class="btn-outline inline-flex items-center text-sm px-3 py-1 rounded-md"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                {$t('common.backToHome')}
-              </a>
-            </div>
-            
             <div class="mb-4">
               <PostLanguageSwitcher slug={post.slug} {availableLocales} />
             </div>

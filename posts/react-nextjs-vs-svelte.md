@@ -229,7 +229,7 @@ export async function load({ params, fetch }) {
 }
 ```
 
-In my migration, I found SvelteKit's approach more consistent and easier to reason about, especially with the new `+page.server.js` and `+page.js` pattern.
+In my migration, I found SvelteKit's approach more consistent and easier to reason about, especially with the new `+page.server.ts` and `+page.js` pattern.
 
 ## Routing
 

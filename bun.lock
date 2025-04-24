@@ -7,6 +7,7 @@
         "@types/node": "^22.14.1",
         "date-fns": "^4.1.0",
         "highlight.js": "^11.11.1",
+        "lucide-svelte": "^0.503.0",
         "marked": "^15.0.10",
         "marked-highlight": "^2.2.1",
         "sass-embedded": "^1.87.0",
@@ -457,6 +458,8 @@
     "lodash.isplainobject": ["lodash.isplainobject@4.0.6", "", {}, ""],
 
     "lodash.merge": ["lodash.merge@4.6.2", "", {}, ""],
+
+    "lucide-svelte": ["lucide-svelte@0.503.0", "", { "peerDependencies": { "svelte": "^3 || ^4 || ^5.0.0-next.42" } }, "sha512-oT1idMbgJKCCLWI4U7bdUYUZqxS78fiTGJuKGZ5u0NJNyuiUErDu3G7sXkYpfDwwspeid7gZSjrlJbTINEfErw=="],
 
     "magic-string": ["magic-string@0.30.17", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0" } }, ""],
 

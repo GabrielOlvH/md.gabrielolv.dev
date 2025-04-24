@@ -317,7 +317,15 @@
       </ul>
     </nav>
   {:else}
-    <p class="text-gray-400 text-sm">No headings found in this article.</p>
+    <div class="toc-loading">
+      <div class="toc-skeleton">
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item skeleton-item-child"></div>
+        <div class="skeleton-item skeleton-item-child"></div>
+        <div class="skeleton-item"></div>
+      </div>
+    </div>
   {/if}
 </div>
 
@@ -531,6 +539,42 @@
       justify-content: flex-start;
       margin-left: calc(var(--indent-level, 0) * 0.75rem);
       margin-right: 0;
+    }
+  }
+  
+  .toc-loading {
+    padding: 0.5rem 0;
+  }
+  
+  .toc-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .skeleton-item {
+    height: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    width: 80%;
+    animation: pulse-skeleton 1.5s infinite ease-in-out;
+  }
+  
+  .skeleton-item-child {
+    width: 70%;
+    margin-left: 1rem;
+    height: 0.8rem;
+  }
+  
+  @keyframes pulse-skeleton {
+    0% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0.3;
     }
   }
 </style>

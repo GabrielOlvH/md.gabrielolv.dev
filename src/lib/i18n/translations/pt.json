@@ -9,5 +9,32 @@
     "noPostsYet": "Ainda não há posts. Volte em breve!",
     "footer": "© {year} Gabriel Olv. Todos os direitos reservados.",
     "backToHome": "Voltar para o início"
+  },
+  "about": {
+    "title": "Sobre Mim",
+    "subtitle": "Conheça o desenvolvedor por trás do código",
+    "intro": "Olá! Eu sou Gabriel, um desenvolvedor apaixonado com amor por criar soluções elegantes para problemas complexos.",
+    "bio": "Com vários anos de experiência em desenvolvimento web, me especializo em construir aplicações web modernas, responsivas e acessíveis. Estou constantemente aprendendo e explorando novas tecnologias para melhorar meu trabalho.",
+    "skills": "Habilidades & Especialidades",
+    "interests": "Quando não estou codando, você pode me encontrar explorando novas tecnologias, contribuindo para projetos open source ou aproveitando atividades ao ar livre.",
+    "connect": "Vamos Conectar"
+  },
+  "contact": {
+    "title": "Entre em Contato",
+    "subtitle": "Adoraria ouvir de você!",
+    "formName": "Nome",
+    "formEmail": "Email",
+    "formMessage": "Mensagem",
+    "formSubmit": "Enviar Mensagem",
+    "socialConnect": "Conecte-se comigo nas redes sociais",
+    "or": "ou",
+    "emailMe": "Envie-me um email diretamente",
+    "response": "Responderei o mais rápido possível!"
+  },
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato",
+    "posts": "Artigos"
   }
 }

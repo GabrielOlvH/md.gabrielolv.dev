@@ -9,5 +9,32 @@
     "noPostsYet": "No posts yet. Check back soon!",
     "footer": " {year} Gabriel Olv. All rights reserved.",
     "backToHome": "Back to home"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Get to know the developer behind the code",
+    "intro": "Hi there! I'm Gabriel, a passionate developer with a love for creating elegant solutions to complex problems.",
+    "bio": "With several years of experience in web development, I specialize in building modern, responsive, and accessible web applications. I'm constantly learning and exploring new technologies to improve my craft.",
+    "skills": "Skills & Expertise",
+    "interests": "When I'm not coding, you can find me exploring new technologies, contributing to open source projects, or enjoying outdoor activities.",
+    "connect": "Let's Connect"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "I'd love to hear from you!",
+    "formName": "Name",
+    "formEmail": "Email",
+    "formMessage": "Message",
+    "formSubmit": "Send Message",
+    "socialConnect": "Connect with me on social media",
+    "or": "or",
+    "emailMe": "Send me an email directly",
+    "response": "I'll get back to you as soon as possible!"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "posts": "Posts"
   }
 }
