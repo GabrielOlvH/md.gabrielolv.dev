@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import DynamicTitle from './DynamicTitle.svelte';
 
   export let title: string = "Gabriel's Tech Blog";
   export let description: string = "Exploring computer science, web development, and my personal coding journey";
@@ -9,6 +10,7 @@
   export let modifiedTime: string | null = null;
   export let tags: string[] = [];
   export let canonical: string | null = null;
+  export let usePathAsTitle: boolean = false;
   
   // Compute the canonical URL if not provided
   $: computedCanonical = canonical || `https://md.gabrielolv.dev${$page.url.pathname}`;
@@ -17,9 +19,14 @@
   $: absoluteImageUrl = image.startsWith('http') ? image : `https://md.gabrielolv.dev${image}`;
 </script>
 
+{#if usePathAsTitle}
+  <DynamicTitle />
+{:else}
+  <DynamicTitle customTitle={title} />
+{/if}
+
 <svelte:head>
   <!-- Basic Meta Tags -->
-  <title>{title}</title>
   <meta name="description" content={description} />
   
   <!-- Canonical URL -->

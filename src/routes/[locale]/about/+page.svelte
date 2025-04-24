@@ -1,4 +1,5 @@
 <script lang="ts">
+  import TableOfContentsDisplay from '$lib/components/TableOfContentsDisplay.svelte';
   import { t } from '$lib/i18n/translations';
   import { page } from '$app/stores';
   import SEO from '$lib/components/SEO.svelte';
@@ -45,30 +46,12 @@
   canonical={`https://md.gabrielolv.dev/${$page.params.locale}/about`}
 />
 
-<main class="min-h-screen py-8 sm:py-10">
-  <!-- Mobile Table of Contents (shown at the top on small screens) -->
-  <div class="lg:hidden max-w-3xl mx-auto px-4 sm:px-8 mb-6">
-    <details class="toc-mobile-container">
-      <summary class="toc-mobile-summary">
-        <span class="text-lg font-bold text-white">README Contents</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </summary>
-      <div class="pt-4">
-        <TableOfContents />
-      </div>
-    </details>
-  </div>
-  
-  <!-- Desktop layout with centered content and TOC on left -->
-  <div class="relative max-w-3xl mx-auto px-4 sm:px-8">
-    <!-- Left sidebar for table of contents (desktop only) -->
-    <div class="hidden lg:block absolute right-full top-0 pr-8 w-64">
-      <div class="fixed">
-        <TableOfContents />
-      </div>
-    </div>
+<main class="min-h-screen sm:py-10">
+
+
+  <TableOfContentsDisplay />
+
+  <div class="relative max-w-3xl mx-auto sm:px-8">
     
     <!-- Main content (centered) -->
     <div class="content-container rounded-lg shadow-md p-6 sm:p-8">

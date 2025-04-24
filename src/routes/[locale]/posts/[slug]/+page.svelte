@@ -1,8 +1,8 @@
 <script lang="ts">
+  import TableOfContentsDisplay from '$lib/components/TableOfContentsDisplay.svelte';
   import { formatDate, t } from '$lib/i18n/translations';
   import { page } from '$app/stores';
   import PostLanguageSwitcher from '$lib/components/PostLanguageSwitcher.svelte';
-  import TableOfContents from '$lib/components/TableOfContents.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
   import SEO from '$lib/components/SEO.svelte';
   import type { PageData } from './$types';
@@ -16,41 +16,24 @@
 </script>
 
 <SEO 
-  title={`${post.title} | Gabriel's Blog`}
+  title={`${post.title}`}
   description={post.excerpt}
   type="article"
   image={post.coverImage || '/images/og-image.jpg'}
   publishedTime={post.date}
   tags={post.tags}
+  usePathAsTitle={true}
 />
 
 <!-- Main container with centered content -->
 <div class="relative">
-  <main class="min-h-screen py-8 sm:py-10">
-    <!-- Mobile Table of Contents (shown at the top on small screens) -->
-    <div class="lg:hidden max-w-3xl mx-auto px-4 sm:px-8 mb-6">
-      <details class="toc-mobile-container">
-        <summary class="toc-mobile-summary">
-          <span class="text-lg font-bold text-white">Contents</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </summary>
-        <div class="pt-4">
-          <TableOfContents />
-        </div>
-      </details>
-    </div>
+  <main class="min-h-screen sm:py-10">
+
     
-    <!-- Desktop layout with centered content and TOC on left -->
-    <div class="relative max-w-3xl mx-auto px-4 sm:px-8">
-      <!-- Left sidebar for table of contents (desktop only) -->
-      <div class="hidden lg:block absolute right-full top-0 pr-8 w-64">
-        <div class="fixed">
-          <TableOfContents />
-        </div>
-      </div>
-      
+    <!-- Desktop layout with centered content -->
+    <div class="relative max-w-3xl mx-auto sm:px-6">
+      <TableOfContentsDisplay/>
+
       <!-- Main content (centered) -->
       <div class="content-container rounded-lg shadow-md p-6 sm:p-8">
         <!-- File Explorer Navigation -->
@@ -96,19 +79,5 @@
 </div>
 
 <style>
-  .toc-mobile-container {
-    background-color: transparent;
-    padding: 0.5rem 0;
-  }
-  
-  .toc-mobile-summary {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-  }
-  
-  details[open] .toc-mobile-summary svg {
-    transform: rotate(180deg);
-  }
+
 </style>

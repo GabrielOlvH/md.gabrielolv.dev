@@ -129,10 +129,13 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+pre {
+  background: none;
+  padding: 0;
+}
 pre code.hljs {
   display: block;
   overflow-x: auto;
-  padding: 1rem !important;
   font-size: 0.9rem;
   line-height: 1.5;
   font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;

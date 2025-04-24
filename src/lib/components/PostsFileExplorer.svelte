@@ -12,6 +12,30 @@
   // Current path from URL including locale
   $: currentPath = $page.url.pathname;
   $: currentLocale = $page.params.locale;
+  
+  let isMobile = false;
+  let urlDisplayElement: HTMLElement;
+
+  onMount(() => {
+    // Check if we're on mobile
+    isMobile = window.innerWidth < 640;
+    
+    // Add resize listener
+    const handleResize = () => {
+      isMobile = window.innerWidth < 640;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Scroll to the end of the path display
+    if (urlDisplayElement) {
+      urlDisplayElement.scrollLeft = urlDisplayElement.scrollWidth;
+    }
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
 
   // Directory structure
   const fileSystem = {
@@ -170,6 +194,25 @@
     
     return breadcrumbs;
   }
+  
+  // Function to get the display name for a breadcrumb
+  function getBreadcrumbDisplay(crumb: { name: string, path: string }, index: number) {
+    if (!isMobile || breadcrumbs.length <= 2) {
+      return crumb.name;
+    }
+    
+    // On mobile with more than 2 breadcrumbs
+    if (index === 0) {
+      // Always show the first segment as "..."
+      return "...";
+    } else if (index < breadcrumbs.length - 1) {
+      // For middle segments, show "..." except for the last one
+      return "...";
+    } else {
+      // For the last segment (current page), show the full name
+      return crumb.name;
+    }
+  }
 
   let dirContent = [];
   let breadcrumbs = [];
@@ -190,7 +233,7 @@
 
 <div class="file-explorer">
   <!-- URL/Path display -->
-  <div class="url-display">
+  <div class="url-display" bind:this={urlDisplayElement}>
     <span class="domain">md.gabrielolv.dev</span>
     {#each breadcrumbs as crumb, i}
       <span class="separator">/</span>
@@ -198,7 +241,7 @@
         href={crumb.path}
         class="path-segment {i === breadcrumbs.length - 1 ? 'current' : ''}"
       >
-        {crumb.name}
+        {getBreadcrumbDisplay(crumb, i)}
       </a>
     {/each}
     <span class="cursor">█</span>
@@ -278,18 +321,44 @@
 
 <style>
   .file-explorer {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
   
   .url-display {
-    padding: 12px 16px;
+    padding: 8px 12px;
     font-family: 'Fira Code', 'Courier New', monospace;
-    font-size: 18px;
+    font-size: 16px;
     color: rgba(255, 255, 255, 0.9);
     white-space: nowrap;
     overflow-x: auto;
     display: flex;
     align-items: center;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(76, 175, 80, 0.3) transparent;
+  }
+  
+  /* Custom scrollbar styling */
+  .url-display::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .url-display::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .url-display::-webkit-scrollbar-thumb {
+    background-color: rgba(76, 175, 80, 0.3);
+    border-radius: 2px;
+  }
+  
+  @media (min-width: 640px) {
+    .url-display {
+      padding: 12px 16px;
+      font-size: 18px;
+    }
+    .file-explorer {
+      margin-bottom: 1.5rem;
+    }
   }
   
   .domain {
@@ -383,11 +452,11 @@
     cursor: pointer;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
-    margin-bottom: 8px;
+
   }
   
   .post-item:hover {
-    background-color: rgba(76, 175, 80, 0.1);
+    background-color: rgba(76, 175, 80, 0.05);
     border-left: 3px solid #4CAF50;
   }
   
@@ -399,29 +468,29 @@
   }
   
   .post-date {
+    display: flex;
+    align-items: center;
     margin-left: auto;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
-    display: flex;
-    align-items: center;
   }
   
   .post-content {
-    padding: 12px 16px 16px 52px;
+    padding: 12px 16px;
   }
   
   .post-title {
     font-size: 16px;
     font-weight: 600;
+    margin: 0 0 8px 0;
     color: #ffffff;
-    margin-bottom: 8px;
   }
   
   .post-excerpt {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 12px;
-    line-height: 1.5;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -431,22 +500,24 @@
   .post-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
     margin-bottom: 12px;
   }
   
   .post-tag {
-    font-size: 11px;
-    background-color: rgba(76, 175, 80, 0.15);
+    font-size: 12px;
+    background-color: rgba(76, 175, 80, 0.1);
     color: #4CAF50;
     padding: 2px 8px;
     border-radius: 12px;
+    border: 1px solid rgba(76, 175, 80, 0.2);
   }
   
   .post-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 8px;
     font-size: 12px;
   }
   

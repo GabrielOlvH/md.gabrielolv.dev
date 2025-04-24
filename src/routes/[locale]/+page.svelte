@@ -20,7 +20,7 @@
 <main
   class="min-h-screen flex flex-col justify-center items-center py-8 sm:py-10"
 >
-  <div class="max-w-3xl w-full mx-auto px-4 sm:px-8">
+  <div class="max-w-3xl w-full mx-auto sm:px-8">
     <div class="content-container rounded-lg shadow-md p-6 sm:p-8">
       <FileExplorer />
 
