@@ -1,10 +1,10 @@
-import { getPosts } from '$lib/server/posts';
+import { getAllPosts } from '$lib/utils/posts';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {
   // Get all posts for both languages
-  const enPosts = await getPosts('en');
-  const ptPosts = await getPosts('pt');
+  const enPosts = await getAllPosts('en');
+  const ptPosts = await getAllPosts('pt');
   
   // Base URL for the site
   const baseUrl = 'https://md.gabrielolv.dev';
