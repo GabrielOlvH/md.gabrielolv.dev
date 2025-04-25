@@ -3,7 +3,6 @@
   import { goto } from '$app/navigation';
   import { Folder, FileText, ArrowUp, User, FilePen, Mail, Calendar } from 'lucide-svelte';
   import { formatDate, t, locale } from '$lib/i18n/translations';
-  import { getAllPosts } from '$lib/utils/posts';
   import { onMount } from 'svelte';
   import type { PostMetadata } from '$lib/utils/posts';
 

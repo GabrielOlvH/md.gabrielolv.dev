@@ -27,7 +27,7 @@ export function markdownToHtml(
   const processor = unified()
     .use(remarkParse)
     .use(remarkGfm)           // GitHub-Flavored Markdown
-    .use(rehypeSlug)          // adds `id` to headings
+
     .use(remarkSmartypants)   // “smart” quotes, dashes, etc.
     .use(() => (tree) => {
       // extract TOC
@@ -55,8 +55,9 @@ export function markdownToHtml(
         toc.push({ id, text: txt, level: lvl })
       })
     })
-    .use(remarkRehype, { allowDangerousHtml: true }) // pass raw HTML through
-    .use(rehypeRaw)          // actually parse the raw HTML
+    .use(remarkRehype, { allowDangerousHtml: true }) // pass rawb HTML through
+    .use(rehypeSlug)          // adds `id` to headings
+    .use(rehypeRaw)
     .use(rehypeHighlight)    // highlight.js
     .use(rehypeStringify)    // → HTML string
 

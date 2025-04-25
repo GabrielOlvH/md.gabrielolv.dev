@@ -14,11 +14,7 @@ export const load: PageServerLoad = async ({ params, depends }) => {
   };
 };
 
-// Add a dependency on the locale parameter to ensure data is reloaded when locale changes
 export const ssr = true;
 export const csr = true;
 export const trailingSlash = 'never';
 export const prerender = false;
-
-// This is the key addition - it tells SvelteKit to track the locale parameter
-// and reload the page data when it changes
