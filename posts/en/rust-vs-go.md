@@ -1,8 +1,8 @@
 ---
-title: "Rust vs Go: Choosing the Right Language for Your Next Project"
-date: "2025-04-05"
-tags: ["Rust", "Go", "Programming Languages", "Performance", "System Programming"]
-excerpt: "A detailed comparison of Rust and Go to help you decide which language is best suited for your next project."
+title: 'Rust vs Go: Choosing the Right Language for Your Next Project'
+date: 2025-04-05
+tags: [Rust, Go, Programming Languages, Performance, System Programming]
+excerpt: A detailed comparison of Rust and Go to help you decide which language is best suited for your next project.
 ---
 
 # Rust vs Go: Choosing the Right Language for Your Next Project

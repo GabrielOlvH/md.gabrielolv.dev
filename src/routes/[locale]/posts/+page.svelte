@@ -9,7 +9,7 @@
 
 </script>
 
-<SEO 
+<SEO
   title={`${$t('nav.posts')} | Gabriel's Blog`}
   description="Explore my latest articles about web development, programming, and technology"
   type="website"
