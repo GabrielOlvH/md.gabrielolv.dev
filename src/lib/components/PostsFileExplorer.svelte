@@ -12,26 +12,30 @@
   // Current path from URL including locale
   $: currentPath = $page.url.pathname;
   $: currentLocale = $page.params.locale;
-  
+
+  // Initialize with a safe check for window
   let isMobile = false;
+  $: if (typeof window !== 'undefined') {
+    isMobile = window.innerWidth < 640;
+  }
   let urlDisplayElement: HTMLElement;
 
   onMount(() => {
     // Check if we're on mobile
     isMobile = window.innerWidth < 640;
-    
+
     // Add resize listener
     const handleResize = () => {
       isMobile = window.innerWidth < 640;
     };
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     // Scroll to the end of the path display
     if (urlDisplayElement) {
       urlDisplayElement.scrollLeft = urlDisplayElement.scrollWidth;
     }
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -42,8 +46,8 @@
     '/': {
       type: 'directory',
       children: {
-        'about': { 
-          type: 'directory', 
+        'about': {
+          type: 'directory',
           icon: User,
           description: 'About me & contact information'
         },
@@ -52,14 +56,14 @@
           icon: Mail,
           description: 'Contact form'
         },
-        'posts': { 
-          type: 'directory', 
+        'posts': {
+          type: 'directory',
           icon: FilePen,
           description: 'Blog posts and articles',
           children: {}
         },
-        'resume.pdf': { 
-          type: 'file', 
+        'resume.pdf': {
+          type: 'file',
           icon: FileText,
           description: 'My resume',
           url: '/resume.pdf'
@@ -74,7 +78,7 @@
       const postsDir = fileSystem['/'].children['posts'];
       // Clear existing posts first to prevent stale data
       postsDir.children = {};
-      
+
       posts.forEach(post => {
         postsDir.children[`${post.slug}.md`] = {
           type: 'file',
@@ -86,14 +90,14 @@
       });
     }
   }
-  
+
   // Get current directory content
   function getCurrentDirContent() {
     // Remove locale from path for directory lookup
     const pathWithoutLocale = currentPath.replace(`/${currentLocale}`, '') || '/';
     const segments = pathWithoutLocale.split('/').filter(segment => segment.length > 0);
     let current = fileSystem['/'];
-    
+
     // Handle root directory
     if (segments.length === 0) {
       return Object.entries(current.children).map(([name, info]) => ({
@@ -101,7 +105,7 @@
         ...info
       }));
     }
-    
+
     // Check if we're in a post detail page
     if (segments.length > 1 && segments[0] === 'posts' && segments[1]) {
       // We're in a post detail page, show posts directory content
@@ -114,23 +118,23 @@
         }));
       }
     }
-    
+
     // Navigate to current directory
     for (let i = 0; i < segments.length; i++) {
       const segment = segments[i];
-      
+
       // Special case for post slugs - don't try to navigate into them
       if (i === 1 && segments[0] === 'posts' && segment !== 'posts') {
         // We're in a post detail page, stop navigation here
         break;
       }
-      
+
       if (current.type !== 'directory' || !current.children[segment]) {
         return [];
       }
       current = current.children[segment];
     }
-    
+
     // Return children of current directory
     if (current.type === 'directory' && current.children) {
       return Object.entries(current.children).map(([name, info]) => ({
@@ -138,10 +142,10 @@
         ...info
       }));
     }
-    
+
     return [];
   }
-  
+
   // Navigate to a path
   function navigateTo(path) {
     // If it's a file with a URL, navigate to that URL
@@ -149,38 +153,38 @@
       goto(path.url);
       return;
     }
-    
+
     // Get path without locale
     const pathWithoutLocale = currentPath.replace(`/${currentLocale}`, '') || '/';
-    
+
     // Otherwise navigate to the directory
-    const newPath = pathWithoutLocale === '/' 
-      ? `/${path.name}` 
+    const newPath = pathWithoutLocale === '/'
+      ? `/${path.name}`
       : `${pathWithoutLocale}/${path.name}`;
-    
+
     goto(`/${currentLocale}${newPath}`);
   }
-  
+
   // Go up one level
   function goUp() {
     // Get path without locale
     const pathWithoutLocale = currentPath.replace(`/${currentLocale}`, '') || '/';
     const segments = pathWithoutLocale.split('/').filter(segment => segment.length > 0);
-    
+
     if (segments.length === 0) return;
-    
+
     segments.pop();
     const newPath = segments.length === 0 ? '' : '/' + segments.join('/');
     goto(`/${currentLocale}${newPath}`);
   }
-  
+
   // Get breadcrumb segments
   function getBreadcrumbs() {
     const breadcrumbs = [{ name: currentLocale, path: `/${currentLocale}` }];
-    
+
     // Get segments including the locale
     const segments = currentPath.split('/').filter(segment => segment.length > 0);
-    
+
     let currentBreadcrumbPath = `/${currentLocale}`;
     // Skip the locale segment which is already added
     for (let i = 1; i < segments.length; i++) {
@@ -191,16 +195,16 @@
         path: currentBreadcrumbPath
       });
     }
-    
+
     return breadcrumbs;
   }
-  
+
   // Function to get the display name for a breadcrumb
   function getBreadcrumbDisplay(crumb: { name: string, path: string }, index: number) {
     if (!isMobile || breadcrumbs.length <= 2) {
       return crumb.name;
     }
-    
+
     // On mobile with more than 2 breadcrumbs
     if (index === 0) {
       // Always show the first segment as "..."
@@ -216,7 +220,7 @@
 
   let dirContent = [];
   let breadcrumbs = [];
-  
+
   // Initialize and update when locale, posts, or path changes
   $: {
     currentLocale;
@@ -225,7 +229,7 @@
     dirContent = getCurrentDirContent();
     breadcrumbs = getBreadcrumbs();
   }
-  
+
   // Check if we're in the posts directory
   $: isPostsDirectory = currentPath.includes(`/${currentLocale}/posts`) && !currentPath.split('/').slice(3).join('/');
   $: isRootDir = currentPath === `/${currentLocale}`;
@@ -238,7 +242,7 @@
       <span class="domain">md.gabrielolv.dev</span>
       {#each breadcrumbs as crumb, i}
         <span class="separator">/</span>
-        <a 
+        <a
           href={crumb.path}
           class="path-segment {i === breadcrumbs.length - 1 ? 'current' : ''}"
         >
@@ -251,7 +255,7 @@
       <LanguageToggle />
     </div>
   </div>
-  
+
   <!-- Directory content -->
   <div class="directory-content">
     {#if !isRootDir}
@@ -263,7 +267,7 @@
         <span class="item-description">Parent directory</span>
       </div>
     {/if}
-    
+
     {#each dirContent as item}
       {#if isPostsDirectory && item.type === 'file' && item.metadata}
         <!-- Post Card Style for Posts Directory -->
@@ -283,7 +287,7 @@
           <div class="post-content">
             <h3 class="post-title">{item.metadata.title}</h3>
             <p class="post-excerpt">{item.metadata.excerpt}</p>
-            
+
             {#if item.metadata.tags && item.metadata.tags.length > 0}
               <div class="post-tags">
                 {#each item.metadata.tags as tag}
@@ -291,7 +295,7 @@
                 {/each}
               </div>
             {/if}
-            
+
             <div class="post-footer">
               <span class="post-reading-time">
                 {item.metadata.readingTime} {$t('common.minRead')}
@@ -328,7 +332,7 @@
   .file-explorer {
     margin-bottom: 1rem;
   }
-  
+
   .url-display-container {
     display: flex;
     justify-content: space-between;
@@ -336,7 +340,7 @@
     background-color: rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .url-display {
     padding: 8px 12px;
     font-family: 'Fira Code', 'Courier New', monospace;
@@ -350,27 +354,27 @@
     scrollbar-color: rgba(76, 175, 80, 0.3) transparent;
     flex: 1;
   }
-  
+
   .language-toggle-container {
     padding-right: 12px;
     display: flex;
     align-items: center;
   }
-  
+
   /* Custom scrollbar styling */
   .url-display::-webkit-scrollbar {
     height: 4px;
   }
-  
+
   .url-display::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   .url-display::-webkit-scrollbar-thumb {
     background-color: rgba(76, 175, 80, 0.3);
     border-radius: 2px;
   }
-  
+
   @media (min-width: 640px) {
     .url-display {
       padding: 12px 16px;
@@ -380,46 +384,46 @@
       margin-bottom: 1.5rem;
     }
   }
-  
+
   .domain {
     color: #ffffff;
     font-weight: 600;
     margin-right: 2px;
   }
-  
+
   .separator {
     color: rgba(255, 255, 255, 0.7);
     margin: 0 2px;
   }
-  
+
   .path-segment {
     color: #ffffff;
     text-decoration: none;
     transition: color 0.2s;
     font-weight: 500;
   }
-  
+
   .path-segment:hover {
     color: #4CAF50;
     text-decoration: underline;
   }
-  
+
   .path-segment.current {
     color: #4CAF50;
     font-weight: 700;
   }
-  
+
   .cursor {
     color: #4CAF50;
     animation: blink 1s step-end infinite;
     margin-left: 2px;
   }
-  
+
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
-  
+
   .directory-content {
     list-style: none;
     padding: 0;
@@ -427,7 +431,7 @@
     box-shadow: 0 0 5px inset rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.05);
   }
-  
+
   .directory-item {
     display: flex;
     align-items: center;
@@ -440,7 +444,7 @@
     color: #ffffff;
     font-weight: 500;
   }
-  
+
   .directory-item.go-up {
     margin-bottom: 4px;
     padding-bottom: 12px;
@@ -451,32 +455,32 @@
     display: flex;
     align-items: center;
   }
-  
+
   .directory-item:hover {
     background-color: rgba(76, 175, 80, 0.1);
     border-left: 3px solid #4CAF50;
   }
-  
+
   .item-icon {
     margin-right: 12px;
     font-size: 18px;
     width: 24px;
     text-align: center;
   }
-  
+
   .item-name {
     font-family: 'Fira Code', 'Courier New', monospace;
     color: #ffffff;
     margin-right: 12px;
     font-weight: 500;
   }
-  
+
   .item-description {
     color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
     margin-left: auto;
   }
-  
+
   /* Post Item Styling */
   .post-item {
     display: flex;
@@ -487,18 +491,18 @@
     border-left: 3px solid transparent;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .post-item:hover {
     background-color: rgba(76, 175, 80, 0.1);
     border-left: 3px solid #4CAF50;
   }
-  
+
   .post-header {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
   }
-  
+
   .post-date {
     display: flex;
     align-items: center;
@@ -506,32 +510,32 @@
     color: rgba(255, 255, 255, 0.6);
     margin-left: auto;
   }
-  
+
   .post-content {
     padding-left: 36px;
   }
-  
+
   .post-title {
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 8px 0;
     color: #ffffff;
   }
-  
+
   .post-excerpt {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
     margin: 0 0 12px 0;
     line-height: 1.5;
   }
-  
+
   .post-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 12px;
   }
-  
+
   .post-tag {
     font-size: 12px;
     background-color: rgba(76, 175, 80, 0.2);
@@ -540,18 +544,18 @@
     border-radius: 4px;
     font-family: 'Fira Code', 'Courier New', monospace;
   }
-  
+
   .post-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 12px;
   }
-  
+
   .post-reading-time {
     color: rgba(255, 255, 255, 0.6);
   }
-  
+
   .post-read-more {
     color: #4CAF50;
     font-weight: 600;

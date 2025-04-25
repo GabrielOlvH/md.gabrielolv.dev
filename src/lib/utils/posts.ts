@@ -150,7 +150,7 @@ const postMap = allEntries.reduce(
   >>
 )
 
-export  function getAllPosts(locale: string): PostMetadata[] {
+export function getAllPosts(locale: string): PostMetadata[] {
   // Sort posts by date (newest first)
   const posts = postsByLocale[locale] ?? []
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
