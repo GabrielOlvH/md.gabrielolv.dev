@@ -1,38 +1,65 @@
-import { marked } from 'marked';
-import { markedHighlight } from 'marked-highlight';
-import hljs from 'highlight.js';
+import rehypeSlug from 'rehype-slug';
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkSmartypants from 'remark-smartypants'
+import remarkRehype from 'remark-rehype'
+import rehypeRaw from 'rehype-raw'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeStringify from 'rehype-stringify'
+import { visit } from 'unist-util-visit'
 
-// Configure marked with syntax highlighting
-marked.use(
-  markedHighlight({
-    langPrefix: 'hljs language-',
-    highlight(code, lang) {
-      // If language is not specified or not found, try to auto-detect
-      const language = lang && hljs.getLanguage(lang) ? lang : 
-                      hljs.highlightAuto(code).language || 'plaintext';
-      
-      // Apply highlighting with the detected or specified language
-      return hljs.highlight(code, { language }).value;
-    }
-  })
-);
-
-// Set default options
-marked.setOptions({
-  gfm: true, // GitHub Flavored Markdown
-  breaks: true, // Convert line breaks to <br>
-  headerIds: true, // Add IDs to headers for linking
-  mangle: false, // Don't escape HTML
-  pedantic: false, // Don't be too strict with markdown spec
-  smartLists: true, // Use smarter list behavior
-  smartypants: true, // Use smart typography
-});
+export interface TocItem {
+  id: string
+  text: string
+  level: number
+}
 
 /**
- * Convert markdown to HTML
- * @param markdown Markdown content to convert
- * @returns HTML content
+ * Turn markdown → { html, toc }
+ * toc is an array of all h2–h4 in document order.
  */
-export function markdownToHtml(markdown: string): string {
-  return marked.parse(markdown);
+export async function markdownToHtml(
+  markdown: string
+): Promise<{ html: string; toc: TocItem[] }> {
+  const toc: TocItem[] = []
+
+  const processor = unified()
+    .use(remarkParse)
+    .use(remarkGfm)           // GitHub-Flavored Markdown
+    .use(rehypeSlug)          // adds `id` to headings
+    .use(remarkSmartypants)   // “smart” quotes, dashes, etc.
+    .use(() => (tree) => {
+      // extract TOC
+      visit(tree, 'heading', (node: any) => {
+        const lvl = node.depth
+        if (lvl < 2 || lvl > 4) return
+
+        // flatten text
+        let txt = ''
+        node.children.forEach((ch: any) => {
+          if (ch.type === 'text' || ch.type === 'inlineCode') {
+            txt += ch.value
+          }
+        })
+
+        // get or re-slugify id
+        const id =
+          node.data?.hProperties?.id ||
+          txt
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-')
+
+        toc.push({ id, text: txt, level: lvl })
+      })
+    })
+    .use(remarkRehype, { allowDangerousHtml: true }) // pass raw HTML through
+    .use(rehypeRaw)          // actually parse the raw HTML
+    .use(rehypeHighlight)    // highlight.js
+    .use(rehypeStringify)    // → HTML string
+
+  const file = await processor.process(markdown)
+  return { html: String(file), toc }
 }

@@ -257,7 +257,7 @@ With Next.js 13+, the App Router adds more features:
 SvelteKit also uses file-system based routing:
 - `routes/+page.svelte` → `/`
 - `routes/blog/[slug]/+page.svelte` → `/blog/:slug`
-- `routes/api/posts/+server.js` → `/api/posts` (API route)
+- `routes/api/posts/+server.ts` → `/api/posts` (API route)
 
 SvelteKit adds:
 - Layout groups

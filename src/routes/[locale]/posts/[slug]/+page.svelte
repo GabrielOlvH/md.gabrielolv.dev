@@ -12,6 +12,7 @@
   $: post = data.post;
   $: content = data.content;
   $: availableLocales = data.availableLocales;
+  $: tocItems = data.items
   $: formattedDate = formatDate(new Date(post.date), $page.params.locale);
 </script>
 
@@ -32,7 +33,7 @@
     
     <!-- Desktop layout with centered content -->
     <div class="relative max-w-3xl mx-auto sm:px-6">
-      <TableOfContentsDisplay/>
+      <TableOfContentsDisplay {tocItems}/>
 
       <!-- Main content (centered) -->
       <div class="content-container rounded-lg shadow-md p-6 sm:p-8">

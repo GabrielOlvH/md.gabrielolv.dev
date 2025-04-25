@@ -2,7 +2,7 @@
   import TableOfContents from './TableOfContents.svelte';
   import { ListCollapse } from 'lucide-svelte';
   import { onMount } from 'svelte';
-  export let items = undefined; // optional prop for explicit TOC items
+  export let items: TocItem[]
 
   let isDesktop = false;
 

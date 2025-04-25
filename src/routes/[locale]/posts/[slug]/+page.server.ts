@@ -1,7 +1,6 @@
 import { getPostBySlug } from "$lib/utils/posts";
 import { error } from "@sveltejs/kit";
 import { getLocaleFromFilename, getOriginalSlug } from "$lib/i18n";
-import { markdownToHtml } from "$lib/utils/markdown";
 import type { PageServerLoad } from "./$types";
 
 // Use the same glob as in your posts utility
@@ -10,15 +9,12 @@ const postsGlob = import.meta.glob("/posts/*.md", { as: "raw" });
 export const load: PageServerLoad = async ({ params }) => {
   const { locale, slug } = params;
 
-  // Get the post content
   const post = await getPostBySlug(slug, locale);
 
   if (!post) {
     throw error(404, "Post not found");
   }
 
-  // Convert markdown to HTML
-  const htmlContent = markdownToHtml(post.content);
 
   // Find all available locales for this post
   const availableLocales = Object.keys(postsGlob)
@@ -37,7 +33,8 @@ export const load: PageServerLoad = async ({ params }) => {
 
   return {
     post: post.metadata,
-    content: htmlContent,
-    availableLocales: uniqueLocales
-  };
+    content: post.content,
+    items: post.toc,
+    availableLocales
+  }
 };

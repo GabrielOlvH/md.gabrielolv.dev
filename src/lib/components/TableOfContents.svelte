@@ -267,9 +267,8 @@
   // Initialize on mount
   onMount(() => {
     if (typeof window === 'undefined') return;
-    
-    // Extract headings after a short delay to ensure content is rendered
-    setTimeout(extractHeadings, 100);
+
+    extractHeadings();
     
     // Set up scroll event listener
     window.addEventListener('scroll', updateActiveHeading, { passive: true });
@@ -285,7 +284,7 @@
   
   // Re-extract headings when content changes
   afterUpdate(() => {
-    setTimeout(extractHeadings, 100);
+    extractHeadings();
   });
 </script>
 

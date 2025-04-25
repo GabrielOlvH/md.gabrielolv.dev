@@ -1,147 +1,128 @@
-import { defaultLocale, getLocaleFromFilename, getOriginalSlug } from "$lib/i18n";
+import { defaultLocale, getLocaleFromFilename, getOriginalSlug }
+  from '$lib/i18n'
+import { markdownToHtml, type TocItem } from '$lib/utils/markdown';
 
 export interface PostMetadata {
-  slug: string;
-  title: string;
-  date: string;
-  excerpt: string;
-  tags: string[];
-  readingTime: number;
-  locale: string;
+  slug: string
+  title: string
+  date: string
+  excerpt: string
+  tags: string[]
+  readingTime: number
+  locale: string
 }
 
+
 function estimateReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const wordCount = content.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
+  const wordsPerMinute = 200
+  const wordCount = content.split(/\s+/).length
+  return Math.ceil(wordCount / wordsPerMinute)
 }
 
 function parseFrontmatter(content: string) {
-  const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  const match = frontmatterRegex.exec(content);
-
-  if (!match) {
-    return {
-      frontmatter: {
-        title: "Untitled",
-        date: new Date().toISOString(),
-        excerpt: "",
-        tags: []
-      },
-      content
-    };
-  }
-
-  const frontmatterBlock = match[1];
-  const contentWithoutFrontmatter = content.replace(frontmatterRegex, "").trim();
-  const frontmatter: Record<string, any> = {};
-
-  frontmatterBlock.split("\n").forEach((line) => {
-    const [key, ...valueParts] = line.split(":");
-    if (key && valueParts.length) {
-      let value = valueParts.join(":").trim();
-
-      // Handle array values (e.g., tags)
-      if (value.startsWith("[") && value.endsWith("]")) {
-        value = value.slice(1, -1).split(",").map((item) => item.trim());
-      }
-      frontmatter[key.trim()] = value;
+  const regex = /---\s*([\s\S]*?)\s*---/
+  const match = content.match(regex)
+  if (!match) return { frontmatter: {}, content }
+  const rawFm = match[1]
+  const body = content.replace(regex, '').trim()
+  const fm: Record<string, string | string[]> = {}
+  for (const line of rawFm.split('\n')) {
+    const [key, ...rest] = line.split(':')
+    if (!rest.length) continue
+    let val = rest.join(':').trim()
+    if (val.startsWith('[') && val.endsWith(']')) {
+      val = val.slice(1, -1).split(',').map((s) => s.trim())
     }
-  });
-
-  return { frontmatter, content: contentWithoutFrontmatter };
+    fm[key.trim()] = val
+  }
+  return { frontmatter: fm, content: body }
 }
 
-// Glob import to compile all Markdown files from the "posts" folder at build time.
-// Adjust the glob path as needed based on your project structure.
-const postsGlob = import.meta.glob("/posts/*.md", { as: "raw" });
 
-export async function getAllPosts(
-  locale: string
-): Promise<PostMetadata[]> {
-  const postsData = await Promise.all(
-    Object.entries(postsGlob).map(async ([filePath, resolver]) => {
-      const fileContents = await resolver();
-      const filename = filePath.split("/").pop();
-      if (!filename) return null;
 
-      const fileLocale = getLocaleFromFilename(filename);
-      if (
-        fileLocale !== locale &&
-        !(fileLocale === null && locale === defaultLocale)
-      ) {
-        return null;
-      }
+type PostEntry = {
+  metadata: PostMetadata
+  html: string,
+  toc: TocItem[]
+}
+// eagerly load all Markdown
+const modules = import.meta.glob('/posts/*.md', { as: 'raw', eager: true })
 
-      // Get the slug without locale suffix and file extension
-      const originalFilename = filename.replace(/\.mdx?$/, "");
-      const slug = getOriginalSlug(originalFilename);
+// build everything exactly once at startup / build time
+const allEntries: PostEntry[] = await Promise.all(
+  Object.entries(modules).map(async ([path, raw]) => {
+    const filename = path.split('/').pop()!
+    const fileLocale = getLocaleFromFilename(filename) ?? defaultLocale
+    const original = filename.replace(/\.mdx?$/, '')
+    const slug = getOriginalSlug(original)
 
-      // Parse frontmatter and calculate reading time
-      const { frontmatter, content } = parseFrontmatter(fileContents);
-      const readingTime = estimateReadingTime(content);
-      const date = frontmatter.date
-        ? new Date(frontmatter.date).toISOString()
-        : new Date().toISOString();
+    // frontmatter parse as before…
+    const { frontmatter, content } = parseFrontmatter(raw as string)
 
-      return {
-        slug,
-        title: frontmatter.title || slug,
-        date,
-        readingTime,
-        tags: frontmatter.tags || [],
-        excerpt: frontmatter.excerpt || content.substring(0, 150) + "...",
-        locale
-      } as PostMetadata;
-    })
-  );
+    const date = frontmatter.date
+      ? new Date(frontmatter.date).toISOString()
+      : new Date().toISOString()
 
-  // Remove null entries and sort by date in descending order
-  const posts = postsData.filter(
-    (post): post is PostMetadata => Boolean(post)
-  );
-  posts.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-  return posts;
+    const readingTime = estimateReadingTime(content)
+
+    const metadata: PostMetadata = {
+      slug,
+      title: frontmatter.title || slug,
+      date,
+      readingTime,
+      tags: frontmatter.tags || [],
+      excerpt:
+        frontmatter.excerpt ||
+        (content.length > 150 ? content.slice(0, 150) + '…' : content),
+      locale: fileLocale
+    }
+
+    // here’s the only difference:
+    const { html, toc } = await markdownToHtml(content)
+
+    return { metadata, html, toc }
+  })
+)
+
+// build your two lookup tables
+const postsByLocale =  allEntries.reduce(
+  (acc, { metadata }) => {
+    const list = acc[metadata.locale] ?? []
+    list.push(metadata)
+    acc[metadata.locale] = list
+    return acc
+  },
+  {} as Record<string, PostMetadata[]>
+)
+const postMap = allEntries.reduce(
+  (acc, { metadata, html, toc }) => {
+    const mapForLocale = acc[metadata.locale] ?? {}
+    mapForLocale[metadata.slug] = { metadata, html, toc }
+    acc[metadata.locale] = mapForLocale
+    return acc
+  },
+  {} as Record<string, Record<
+    string,
+    { metadata: PostMetadata; html: string; toc: TocItem[] }
+  >>
+)
+
+export async function getAllPosts(locale: string): Promise<PostMetadata[]> {
+  return postsByLocale[locale] ?? []
 }
 
 export async function getPostBySlug(
   slug: string,
   locale: string
-): Promise<{ metadata: PostMetadata; content: string } | null> {
-  const entries = Object.entries(postsGlob);
-  for (const [filePath, resolver] of entries) {
-    const filename = filePath.split("/").pop();
-    if (!filename) continue;
-
-    const fileSlug = getOriginalSlug(filename.replace(/\.mdx?$/, ""));
-    const fileLocale = getLocaleFromFilename(filename);
-
-    if (
-      fileSlug === slug &&
-      (fileLocale === locale ||
-        (fileLocale === null && locale === defaultLocale))
-    ) {
-      const fileContents = await resolver();
-      const { frontmatter, content } = parseFrontmatter(fileContents);
-      const readingTime = estimateReadingTime(content);
-      const date = frontmatter.date
-        ? new Date(frontmatter.date).toISOString()
-        : new Date().toISOString();
-
-      const metadata: PostMetadata = {
-        slug,
-        title: frontmatter.title || slug,
-        date,
-        readingTime,
-        tags: frontmatter.tags || [],
-        excerpt: frontmatter.excerpt || content.substring(0, 150) + "...",
-        locale
-      };
-
-      return { metadata, content };
-    }
+): Promise<
+  { metadata: PostMetadata; content: string; toc: TocItem[] } | null
+> {
+  const entry =
+    postMap[locale]?.[slug] ?? postMap[defaultLocale]?.[slug] ?? null
+  if (!entry) return null
+  return {
+    metadata: entry.metadata,
+    content: entry.html,
+    toc: entry.toc
   }
-  return null;
 }
