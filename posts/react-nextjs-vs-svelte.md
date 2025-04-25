@@ -1,8 +1,15 @@
 ---
-title: "React & Next.js vs Svelte: Choosing the Right Framework"
-date: "2025-04-23"
-tags: ["React", "Next.js", "Svelte", "SvelteKit", "JavaScript Frameworks", "Web Development"]
-excerpt: "A comprehensive comparison of React with Next.js versus Svelte with SvelteKit for modern web application development."
+title: React & Next.js vs Svelte
+date: 2025-04-23
+tags:
+  - React
+  - Svelte
+  - SvelteKit
+  - JavaScript
+  - Frameworks
+  - Web
+  - Development
+excerpt: A comprehensive comparison of React with Next.js versus Svelte with SvelteKit for modern web application development.
 ---
 
 # React & Next.js vs Svelte: Choosing the Right Framework

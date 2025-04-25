@@ -1,8 +1,12 @@
 ---
-title: "Começando com Next.js"
-date: "2023-04-15"
-tags: ["Next.js", "React", "Desenvolvimento Web"]
-excerpt: "Um guia para iniciantes na construção de aplicações web modernas com Next.js"
+title: Começando com Next.js
+date: 2023-04-15
+tags:
+  - Next.js
+  - React
+  - Desenvolvimento
+  - Web
+excerpt: Um guia para iniciantes na construção de aplicações web modernas com Next.js
 ---
 
 # Começando com Next.js
