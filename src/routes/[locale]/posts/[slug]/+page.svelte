@@ -5,17 +5,16 @@
   import PostLanguageSwitcher from '$lib/components/PostLanguageSwitcher.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
   import SEO from '$lib/components/SEO.svelte';
-  import type { PageData } from './$types';
+  import { getAvailableLocalesForPost, getPostBySlug } from '$lib/utils/posts';
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-  
-  export let data: PageData;
-  
-  $: post = data.post;
-  $: content = data.content;
-  $: availableLocales = data.availableLocales;
-  $: items = data.items;
-  $: formattedDate = formatDate(new Date(post.date), page.params.locale);
+
+
+  const post = $derived(getPostBySlug(page.params.slug, page.params.locale)!);
+  const content = $derived(post.content);
+  const availableLocales = $derived(getAvailableLocalesForPost(page.params.slug));
+  const items = $derived(post.toc);
+  const formattedDate = $derived(formatDate(new Date(post.metadata.date), page.params.locale));
   
   // Analytics tracking variables
   let startTime: number;
@@ -72,13 +71,13 @@
     // Track if user reached middle of article
     if (!hasReachedMiddle && scrollPercentage >= 50) {
       hasReachedMiddle = true;
-      sendAnalyticsEvent('post_milestone', { milestone: 'middle', post_slug: post.slug });
+      sendAnalyticsEvent('post_milestone', { milestone: 'middle', post_slug: post.metadata.slug });
     }
     
     // Track if user reached end of article
     if (!hasReachedEnd && scrollPercentage >= 90) {
       hasReachedEnd = true;
-      sendAnalyticsEvent('post_milestone', { milestone: 'end', post_slug: post.slug });
+      sendAnalyticsEvent('post_milestone', { milestone: 'end', post_slug: post.metadata.slug });
     }
   }
   
@@ -93,13 +92,13 @@
     const target = event.target as HTMLElement;
     if (target.tagName === 'A') {
       sendAnalyticsEvent('link_click', { 
-        post_slug: post.slug,
+        post_slug: post.metadata.slug,
         link_text: target.textContent || '',
         link_url: (target as HTMLAnchorElement).href
       });
     } else if (target.tagName === 'PRE' || target.closest('pre')) {
       sendAnalyticsEvent('code_interaction', { 
-        post_slug: post.slug,
+        post_slug: post.metadata.slug,
         code_language: target.closest('pre')?.querySelector('code')?.className.replace('language-', '') || 'unknown'
       });
     }
@@ -119,7 +118,7 @@
           blobs: [
             location.pathname,
             eventType,
-            post.slug,
+            post.metadata.slug,
             eventData.milestone || '',
             navigator.language
           ],
@@ -147,7 +146,7 @@
     if (!browser || !post) return;
     
     sendAnalyticsEvent('post_engagement', {
-      post_slug: post.slug,
+      post_slug: post.metadata.slug,
       time_spent_seconds: timeSpentSeconds,
       max_scroll_percentage: maxScrollPercentage,
       scroll_direction_changes: scrollDirectionChanges,
@@ -187,7 +186,7 @@
       // Send periodic updates for long reading sessions
       if (timeSpentSeconds > 0 && timeSpentSeconds % 60 === 0) {
         sendAnalyticsEvent('reading_time_update', {
-          post_slug: post.slug,
+          post_slug: post.metadata.slug,
           time_spent_seconds: timeSpentSeconds,
           max_scroll_percentage: maxScrollPercentage
         });
@@ -195,7 +194,7 @@
     }, 1000);
     
     // Track initial page view for post
-    sendAnalyticsEvent('post_view', { post_slug: post.slug });
+    sendAnalyticsEvent('post_view', { post_slug: post.metadata.slug });
     
     // Set up activity tracking
     ['mousemove', 'keydown', 'click', 'touchstart'].forEach(eventType => {
@@ -234,12 +233,12 @@
 </script>
 
 <SEO 
-  title={`${post.title}`}
-  description={post.excerpt}
+  title={`${post.metadata.title}`}
+  description={post.metadata.excerpt}
   type="article"
-  image={post.coverImage || '/images/og-image.jpg'}
-  publishedTime={post.date}
-  tags={post.tags}
+  image={post.metadata.coverImage || '/images/og-image.jpg'}
+  publishedTime={post.metadata.date}
+  tags={post.metadata.tags}
   usePathAsTitle={true}
 />
 
@@ -260,20 +259,20 @@
         <article>
           <header class="mb-8">
             <div class="mb-4">
-              <PostLanguageSwitcher slug={post.slug} {availableLocales} />
+              <PostLanguageSwitcher slug={post.metadata.slug} {availableLocales} />
             </div>
             
-            <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-white">{post.title}</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-white">{post.metadata.title}</h1>
             
             <div class="flex items-center text-sm text-gray-400 mb-4">
               <span>{formattedDate}</span>
               <span class="mx-2">•</span>
-              <span>{post.readingTime} {$t('common.minRead')}</span>
+              <span>{post.metadata.readingTime} {$t('common.minRead')}</span>
             </div>
             
-            {#if post.tags.length > 0}
+            {#if post.metadata.tags.length > 0}
               <div class="flex flex-wrap gap-2 mb-6">
-                {#each post.tags as tag (tag)}
+                {#each post.metadata.tags as tag (tag)}
                   <span class="tag">
                     {tag}
                   </span>

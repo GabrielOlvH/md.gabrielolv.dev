@@ -19,7 +19,8 @@
           The page you're looking for doesn't exist or has been moved.
         </p>
       </div>
-
+    <p>{error}</p>
+    <p>{status}</p>
 
     <div class="pt-4">
       <a
