@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { User, FilePen, Mail, FileText } from 'lucide-svelte';
   import BaseFileExplorer from './BaseFileExplorer.svelte';
+  import LanguageToggle from './LanguageToggle.svelte';
 
   $: currentPath = $page.url.pathname;
   $: locale = $page.params.locale;
@@ -34,4 +35,6 @@
   $: breadcrumbs = getBreadcrumbs();
 </script>
 
-<BaseFileExplorer {fileSystem} {currentPath} {locale} {breadcrumbs} />
+<BaseFileExplorer {fileSystem} {currentPath} {locale} {breadcrumbs}>
+  <LanguageToggle />
+</BaseFileExplorer>

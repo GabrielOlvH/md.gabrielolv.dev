@@ -96,14 +96,19 @@
 
 <div class="file-explorer">
   <!-- URL/Path display -->
-  <div class="url-display" bind:this={urlDisplayElement}>
-    <span class="domain">md.gabrielolv.dev</span>
-    {#each breadcrumbs as crumb, i}
-      <span class="sep">/</span>
-      <span class="breadcrumb {i === breadcrumbs.length - 1 ? 'current' : ''}" on:click={() => onNavigate(crumb.path)}>
-        {getBreadcrumbDisplay(crumb, i)}
-      </span>
-    {/each}
+  <div class="url-display-container">
+    <div class="url-display" bind:this={urlDisplayElement}>
+      <span class="domain">md.gabrielolv.dev</span>
+      {#each breadcrumbs as crumb, i}
+        <span class="sep">/</span>
+        <span class="breadcrumb {i === breadcrumbs.length - 1 ? 'current' : ''}" on:click={() => onNavigate(crumb.path)}>
+          {getBreadcrumbDisplay(crumb, i)}
+        </span>
+      {/each}
+    </div>
+    <div class="language-toggle-container">
+      <slot></slot>
+    </div>
   </div>
 
   <!-- Directory content -->
@@ -143,6 +148,13 @@
   .file-explorer {
     margin-bottom: 1rem;
   }
+  .url-display-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
   .url-display {
     padding: 8px 12px;
     font-family: 'Fira Code', 'Courier New', monospace;
@@ -154,6 +166,13 @@
     align-items: center;
     scrollbar-width: thin;
     scrollbar-color: rgba(76, 175, 80, 0.3) transparent;
+    flex: 1;
+  }
+  
+  .language-toggle-container {
+    padding-right: 12px;
+    display: flex;
+    align-items: center;
   }
   
   /* Custom scrollbar styling */

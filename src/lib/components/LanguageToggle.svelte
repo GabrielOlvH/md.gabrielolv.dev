@@ -31,10 +31,35 @@
 
 <button
   aria-label="Toggle language"
-  class="rounded-md p-2 text-green-700 hover:bg-green-100 hover:text-green-800 dark:text-green-300 dark:hover:bg-green-800 dark:hover:text-green-200 transition-colors"
+  class="language-toggle"
   on:click={toggleLanguage}
 >
-  <span class="font-medium">
-    {currentLocale === 'en' ? 'PT' : 'EN'}
-  </span>
+  <span>{currentLocale === 'en' ? 'PT' : 'EN'}</span>
 </button>
+
+<style>
+  .language-toggle {
+    background: none;
+    border: 1px solid rgba(76, 175, 80, 0.5);
+    border-radius: 4px;
+    color: #4CAF50;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .language-toggle:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-color: #4CAF50;
+  }
+  
+  @media (min-width: 640px) {
+    .language-toggle {
+      font-size: 16px;
+      padding: 6px 10px;
+    }
+  }
+</style>

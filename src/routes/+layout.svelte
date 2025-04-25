@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../app.css';
-	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
 	import SEO from '$lib/components/SEO.svelte';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
@@ -117,10 +116,5 @@
 </svelte:head>
 
 <div class="min-h-screen">
-	<div class="fixed top-4 right-4 z-50 flex space-x-2">
-		<LanguageToggle />
-	</div>
-
-	
 	{@render children()}
 </div>

@@ -5,6 +5,7 @@
   import { formatDate, t, locale } from '$lib/i18n/translations';
   import { onMount } from 'svelte';
   import type { PostMetadata } from '$lib/utils/posts';
+  import LanguageToggle from './LanguageToggle.svelte';
 
   export let posts: PostMetadata[] = [];
 
@@ -232,18 +233,23 @@
 
 <div class="file-explorer">
   <!-- URL/Path display -->
-  <div class="url-display" bind:this={urlDisplayElement}>
-    <span class="domain">md.gabrielolv.dev</span>
-    {#each breadcrumbs as crumb, i}
-      <span class="separator">/</span>
-      <a 
-        href={crumb.path}
-        class="path-segment {i === breadcrumbs.length - 1 ? 'current' : ''}"
-      >
-        {getBreadcrumbDisplay(crumb, i)}
-      </a>
-    {/each}
-    <span class="cursor">█</span>
+  <div class="url-display-container">
+    <div class="url-display" bind:this={urlDisplayElement}>
+      <span class="domain">md.gabrielolv.dev</span>
+      {#each breadcrumbs as crumb, i}
+        <span class="separator">/</span>
+        <a 
+          href={crumb.path}
+          class="path-segment {i === breadcrumbs.length - 1 ? 'current' : ''}"
+        >
+          {getBreadcrumbDisplay(crumb, i)}
+        </a>
+      {/each}
+      <span class="cursor">█</span>
+    </div>
+    <div class="language-toggle-container">
+      <LanguageToggle />
+    </div>
   </div>
   
   <!-- Directory content -->
@@ -323,6 +329,14 @@
     margin-bottom: 1rem;
   }
   
+  .url-display-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
   .url-display {
     padding: 8px 12px;
     font-family: 'Fira Code', 'Courier New', monospace;
@@ -334,6 +348,13 @@
     align-items: center;
     scrollbar-width: thin;
     scrollbar-color: rgba(76, 175, 80, 0.3) transparent;
+    flex: 1;
+  }
+  
+  .language-toggle-container {
+    padding-right: 12px;
+    display: flex;
+    align-items: center;
   }
   
   /* Custom scrollbar styling */
@@ -389,18 +410,20 @@
   }
   
   .cursor {
-    display: inline-block;
-    color: rgba(255, 255, 255, 0.9);
-    margin-left: 4px;
+    color: #4CAF50;
     animation: blink 1s step-end infinite;
+    margin-left: 2px;
   }
   
   @keyframes blink {
+    0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
   
   .directory-content {
-    padding: 8px 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
     box-shadow: 0 0 5px inset rgba(0, 0, 0, 0.25);
     background-color: rgba(0, 0, 0, 0.05);
   }
@@ -408,20 +431,30 @@
   .directory-item {
     display: flex;
     align-items: center;
+    gap: 0.5em;
     padding: 10px 16px;
     cursor: pointer;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    color: #ffffff;
+    font-weight: 500;
+  }
+  
+  .directory-item.go-up {
+    margin-bottom: 4px;
+    padding-bottom: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #4CAF50;
+    display: flex;
+    align-items: center;
   }
   
   .directory-item:hover {
     background-color: rgba(76, 175, 80, 0.1);
     border-left: 3px solid #4CAF50;
-  }
-  
-  .go-up {
-    margin-bottom: 4px;
-    padding-bottom: 12px;
   }
   
   .item-icon {
@@ -444,42 +477,42 @@
     margin-left: auto;
   }
   
-  /* Post Card Styles */
+  /* Post Item Styling */
   .post-item {
-    display: block;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
     cursor: pointer;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
-
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .post-item:hover {
-    background-color: rgba(76, 175, 80, 0.05);
+    background-color: rgba(76, 175, 80, 0.1);
     border-left: 3px solid #4CAF50;
   }
   
   .post-header {
     display: flex;
     align-items: center;
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+    margin-bottom: 8px;
   }
   
   .post-date {
     display: flex;
     align-items: center;
-    margin-left: auto;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
+    margin-left: auto;
   }
   
   .post-content {
-    padding: 12px 16px;
+    padding-left: 36px;
   }
   
   .post-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     margin: 0 0 8px 0;
     color: #ffffff;
@@ -487,36 +520,31 @@
   
   .post-excerpt {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.8);
     margin: 0 0 12px 0;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    line-height: 1.5;
   }
   
   .post-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 12px;
   }
   
   .post-tag {
     font-size: 12px;
-    background-color: rgba(76, 175, 80, 0.1);
+    background-color: rgba(76, 175, 80, 0.2);
     color: #4CAF50;
     padding: 2px 8px;
-    border-radius: 12px;
-    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Courier New', monospace;
   }
   
   .post-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
     font-size: 12px;
   }
   
@@ -526,6 +554,6 @@
   
   .post-read-more {
     color: #4CAF50;
-    font-weight: 500;
+    font-weight: 600;
   }
 </style>
