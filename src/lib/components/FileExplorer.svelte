@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { goto } from '$app/navigation';
-  import { User, FilePen, Mail, FileText } from 'lucide-svelte';
+  import { page } from '$app/state';
+  import { User, FilePen, Mail, FileText, Briefcase } from 'lucide-svelte';
   import BaseFileExplorer from './BaseFileExplorer.svelte';
   import LanguageToggle from './LanguageToggle.svelte';
 
-  $: currentPath = $page.url.pathname;
-  $: locale = $page.params.locale;
+  const currentPath = $derived(page.url.pathname);
+  const locale = $derived(page.params.locale);
 
   // Directory structure
   const fileSystem = {
@@ -15,6 +14,7 @@
       children: {
         'about': { type: 'directory', icon: User, description: 'About me & contact information' },
         'contact': { type: 'directory', icon: Mail, description: 'Contact form' },
+        'projects': { type: 'directory', icon: Briefcase, description: 'Personal and professional projects' },
         'posts': { type: 'directory', icon: FilePen, description: 'Blog posts and articles', children: {} },
         'resume.pdf': { type: 'file', icon: FileText, description: 'My resume', url: '/resume.pdf' }
       }
@@ -32,7 +32,7 @@
     }
     return breadcrumbs;
   }
-  $: breadcrumbs = getBreadcrumbs();
+  const breadcrumbs = $derived(getBreadcrumbs());
 </script>
 
 <BaseFileExplorer {fileSystem} {currentPath} {locale} {breadcrumbs}>

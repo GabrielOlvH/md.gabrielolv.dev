@@ -1,7 +1,6 @@
 <script lang="ts">
-  import TableOfContentsDisplay from '$lib/components/TableOfContentsDisplay.svelte';
   import { t } from '$lib/i18n/translations';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import SEO from '$lib/components/SEO.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
   import { Mail, Github, Linkedin, Twitter, Code, MessageSquare, Briefcase, ExternalLink } from 'lucide-svelte';
@@ -18,12 +17,11 @@
   title={`${$t('contact.title')} | Gabriel's Blog`}
   description={$t('contact.subtitle')}
   type="website"
-  canonical={`https://md.gabrielolv.dev/${$page.params.locale}/contact`}
+  canonical={`https://md.gabrielolv.dev/${page.params.locale}/contact`}
 />
 
 <main class="min-h-screen sm:py-10">
   <div class="relative max-w-3xl mx-auto sm:px-8">
-    <TableOfContentsDisplay/>
 
     <div class="content-container rounded-lg shadow-md p-6 sm:p-8">
       <FileExplorer />
@@ -50,7 +48,7 @@
           </h2>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            {#each socialLinks as link}
+            {#each socialLinks as link (link)}
               <a href={link.url} target="_blank" rel="noopener noreferrer"
                 class="flex items-center justify-center gap-2 p-4 bg-gray-800/60 hover:bg-gray-700 rounded-lg border border-green-800/30 transition duration-200">
                 <svelte:component this={link.icon} class="h-5 w-5 text-green-500" />

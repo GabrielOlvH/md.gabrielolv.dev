@@ -1,10 +1,8 @@
 <script lang="ts">
-  import TableOfContentsDisplay from '$lib/components/TableOfContentsDisplay.svelte';
   import { t } from '$lib/i18n/translations';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import SEO from '$lib/components/SEO.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
-  import TableOfContents from '$lib/components/TableOfContents.svelte';
   import { User, Wrench, Sparkles, Mail } from 'lucide-svelte';
   
   // Skills with proficiency levels (0-100)
@@ -43,13 +41,10 @@
   title={`${$t('about.title')} | Gabriel's Blog`}
   description={$t('about.subtitle')}
   type="website"
-  canonical={`https://md.gabrielolv.dev/${$page.params.locale}/about`}
+  canonical={`https://md.gabrielolv.dev/${page.params.locale}/about`}
 />
 
 <main class="min-h-screen sm:py-10">
-
-
-  <TableOfContentsDisplay />
 
   <div class="relative max-w-3xl mx-auto sm:px-8">
     
@@ -96,7 +91,7 @@
           </h2>
           
           <div class="grid gap-4 mb-8">
-            {#each skills as skill}
+            {#each skills as skill (skill)}
               <div class="skill-item">
                 <div class="flex justify-between mb-1">
                   <span class="font-medium text-white">{skill.name}</span>
@@ -122,7 +117,7 @@
           </p>
           
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            {#each ['Coding', 'Open Source', 'Learning', 'Hiking'] as interest}
+            {#each ['Coding', 'Open Source', 'Learning', 'Hiking'] as interest (interest)}
               <div class="p-3 rounded-lg bg-green-900/20 border border-green-800/30 text-center">
                 <div class="text-white font-medium">{interest}</div>
               </div>
@@ -206,7 +201,7 @@
               <h3 id="social-links">{$t('contact.socialConnect')}</h3>
               
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                {#each socialLinks as link}
+                {#each socialLinks as link (link)}
                   <a 
                     href={link.url} 
                     target="_blank" 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import TableOfContentsDisplay from '$lib/components/TableOfContentsDisplay.svelte';
   import { formatDate, t } from '$lib/i18n/translations';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import PostLanguageSwitcher from '$lib/components/PostLanguageSwitcher.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
   import SEO from '$lib/components/SEO.svelte';
@@ -14,8 +14,8 @@
   $: post = data.post;
   $: content = data.content;
   $: availableLocales = data.availableLocales;
-  $: tocItems = data.items;
-  $: formattedDate = formatDate(new Date(post.date), $page.params.locale);
+  $: items = data.items;
+  $: formattedDate = formatDate(new Date(post.date), page.params.locale);
   
   // Analytics tracking variables
   let startTime: number;
@@ -250,7 +250,7 @@
     
     <!-- Desktop layout with centered content -->
     <div class="relative max-w-3xl mx-auto sm:px-6">
-      <TableOfContentsDisplay {tocItems}/>
+      <TableOfContentsDisplay {items}/>
 
       <!-- Main content (centered) -->
       <div class="content-container rounded-lg shadow-md p-6 sm:p-8">
@@ -273,7 +273,7 @@
             
             {#if post.tags.length > 0}
               <div class="flex flex-wrap gap-2 mb-6">
-                {#each post.tags as tag}
+                {#each post.tags as tag (tag)}
                   <span class="tag">
                     {tag}
                   </span>

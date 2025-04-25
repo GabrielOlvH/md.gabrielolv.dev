@@ -29,7 +29,7 @@ function parseFrontmatter(content: string) {
   for (const line of rawFm.split('\n')) {
     const [key, ...rest] = line.split(':')
     if (!rest.length) continue
-    let val = rest.join(':').trim()
+    let val: string | string[] = rest.join(':').trim()
     if (val.startsWith('[') && val.endsWith(']')) {
       val = val.slice(1, -1).split(',').map((s) => s.trim())
     }
@@ -80,19 +80,19 @@ const allEntries: PostEntry[] =
     const { frontmatter, content } = parseFrontmatter(raw as string)
 
     const date = frontmatter.date
-      ? new Date(frontmatter.date).toISOString()
+      ? new Date(frontmatter.date as string).toISOString()
       : new Date().toISOString()
 
     const readingTime = estimateReadingTime(content)
 
     const metadata: PostMetadata = {
       slug,
-      title: frontmatter.title || slug,
+      title: frontmatter.title as string || slug,
       date,
       readingTime,
-      tags: frontmatter.tags || [],
+      tags: frontmatter.tags as string[] || [],
       excerpt:
-        frontmatter.excerpt ||
+        frontmatter.excerpt as string ||
         (content.length > 150 ? content.slice(0, 150) + '…' : content),
       locale: fileLocale
     }
@@ -150,7 +150,7 @@ const postMap = allEntries.reduce(
   >>
 )
 
-export async function getAllPosts(locale: string): Promise<PostMetadata[]> {
+export  function getAllPosts(locale: string): PostMetadata[] {
   // Sort posts by date (newest first)
   const posts = postsByLocale[locale] ?? []
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

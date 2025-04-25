@@ -2,6 +2,7 @@
 export const locales = ['en', 'pt'];
 export const defaultLocale = 'en';
 
+
 // Function to get the locale from a path
 export function getLocaleFromPath(path: string): string {
   const pathParts = path.split('/').filter(Boolean);

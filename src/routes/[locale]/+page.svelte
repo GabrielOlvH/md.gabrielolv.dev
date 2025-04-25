@@ -2,19 +2,17 @@
   import { t } from '$lib/i18n/translations';
   import SEO from '$lib/components/SEO.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
-  import { page } from '$app/stores';
-  import type { PageData } from './$types';
+  import { page } from '$app/state';
 
-  export let data: PageData;
 
-  $: currentYear = new Date().getFullYear();
+  const currentYear = $derived(new Date().getFullYear());
 </script>
 
 <SEO
   title={$t('home.title')}
   description={$t('home.subtitle')}
   type="website"
-  canonical={`https://md.gabrielolv.dev/${$page.params.locale}`}
+  canonical={`https://md.gabrielolv.dev/${page.params.locale}`}
 />
 
 <main

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { t } from '$lib/i18n/translations';
-  import { page } from '$app/stores';
+  import { locale, t } from '$lib/i18n/translations';
+  import { page } from '$app/state';
   import SEO from '$lib/components/SEO.svelte';
   import PostsFileExplorer from '$lib/components/PostsFileExplorer.svelte';
-  
-  export let data;
-  $: posts = data.posts;
+  import { getAllPosts } from '$lib/utils/posts';
+
+  const posts = $derived(getAllPosts($locale));
 
 </script>
 
@@ -13,7 +13,7 @@
   title={`${$t('nav.posts')} | Gabriel's Blog`}
   description="Explore my latest articles about web development, programming, and technology"
   type="website"
-  canonical={`https://md.gabrielolv.dev/${$page.params.locale}/posts`}
+  canonical={`https://md.gabrielolv.dev/${page.params.locale}/posts`}
 />
 
 <main class="min-h-screen sm:py-10">
