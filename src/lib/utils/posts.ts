@@ -1,4 +1,4 @@
-import { defaultLocale, getLocaleFromFilename, getOriginalSlug }
+import { defaultLocale, getLocaleFromFilename, getOriginalSlug, locales }
   from '$lib/i18n'
 import { markdownToHtml, type TocItem } from '$lib/utils/markdown';
 
@@ -10,8 +10,8 @@ export interface PostMetadata {
   tags: string[]
   readingTime: number
   locale: string
+  translations?: string[] // Available translations for this post
 }
-
 
 function estimateReadingTime(content: string): number {
   const wordsPerMinute = 200
@@ -38,25 +38,45 @@ function parseFrontmatter(content: string) {
   return { frontmatter: fm, content: body }
 }
 
-
-
 type PostEntry = {
   metadata: PostMetadata
   html: string,
   toc: TocItem[]
 }
-// eagerly load all Markdown
-const modules = import.meta.glob('/posts/*.md', { as: 'raw', eager: true })
 
-// build everything exactly once at startup / build time
+// Load posts from both the legacy flat structure and the new organized structure
+// Legacy: /posts/*.md
+// New: /posts/{locale}/*.md
+const legacyModules = import.meta.glob('/posts/*.md', { as: 'raw', eager: true })
+const organizedModules = import.meta.glob('/posts/*/*.md', { as: 'raw', eager: true })
+
+// Combine both module sets
+const allModules = { ...legacyModules, ...organizedModules }
+
+// Process all posts
 const allEntries: PostEntry[] =
-  Object.entries(modules).map(([path, raw]) => {
-    const filename = path.split('/').pop()!
-    const fileLocale = getLocaleFromFilename(filename) ?? defaultLocale
-    const original = filename.replace(/\.mdx?$/, '')
-    const slug = getOriginalSlug(original)
+  Object.entries(allModules).map(([path, raw]) => {
+    // Extract locale and slug from the path
+    const pathParts = path.split('/')
+    const filename = pathParts.pop()!
+    const possibleLocale = pathParts[pathParts.length - 1]
+    
+    // Determine locale from directory or filename
+    let fileLocale: string
+    let slug: string
+    
+    if (locales.includes(possibleLocale)) {
+      // New structure: /posts/{locale}/slug.md
+      fileLocale = possibleLocale
+      slug = filename.replace(/\.mdx?$/, '')
+    } else {
+      // Legacy structure: /posts/slug.{locale}.md
+      fileLocale = getLocaleFromFilename(filename) ?? defaultLocale
+      const original = filename.replace(/\.mdx?$/, '')
+      slug = getOriginalSlug(original)
+    }
 
-    // frontmatter parse as before…
+    // Parse frontmatter
     const { frontmatter, content } = parseFrontmatter(raw as string)
 
     const date = frontmatter.date
@@ -77,14 +97,37 @@ const allEntries: PostEntry[] =
       locale: fileLocale
     }
 
-    // here’s the only difference:
+    // Convert markdown to HTML
     const { html, toc } = markdownToHtml(content)
 
     return { metadata, html, toc }
   })
 
-// build your two lookup tables
-const postsByLocale =  allEntries.reduce(
+// Group posts by slug across all locales to identify translations
+const postsBySlug = allEntries.reduce((acc, entry) => {
+  const { slug } = entry.metadata
+  if (!acc[slug]) acc[slug] = []
+  acc[slug].push(entry)
+  return acc
+}, {} as Record<string, PostEntry[]>)
+
+// Add translation information to each post
+Object.values(postsBySlug).forEach(entries => {
+  if (entries.length > 1) {
+    // This post has translations
+    const availableLocales = entries.map(entry => entry.metadata.locale)
+    
+    // Add translations to each entry's metadata
+    entries.forEach(entry => {
+      entry.metadata.translations = availableLocales.filter(
+        locale => locale !== entry.metadata.locale
+      )
+    })
+  }
+})
+
+// Build lookup tables
+const postsByLocale = allEntries.reduce(
   (acc, { metadata }) => {
     const list = acc[metadata.locale] ?? []
     list.push(metadata)
@@ -93,6 +136,7 @@ const postsByLocale =  allEntries.reduce(
   },
   {} as Record<string, PostMetadata[]>
 )
+
 const postMap = allEntries.reduce(
   (acc, { metadata, html, toc }) => {
     const mapForLocale = acc[metadata.locale] ?? {}
@@ -107,7 +151,9 @@ const postMap = allEntries.reduce(
 )
 
 export async function getAllPosts(locale: string): Promise<PostMetadata[]> {
-  return postsByLocale[locale] ?? []
+  // Sort posts by date (newest first)
+  const posts = postsByLocale[locale] ?? []
+  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 export async function getPostBySlug(
@@ -124,4 +170,15 @@ export async function getPostBySlug(
     content: entry.html,
     toc: entry.toc
   }
+}
+
+// Get all available locales for a specific post slug
+export async function getAvailableLocalesForPost(slug: string): Promise<string[]> {
+  const entries = postsBySlug[slug] || []
+  return entries.map(entry => entry.metadata.locale)
+}
+
+// Helper function to determine if a post has a translation in a specific locale
+export function hasTranslation(post: PostMetadata, locale: string): boolean {
+  return post.translations?.includes(locale) || false
 }
