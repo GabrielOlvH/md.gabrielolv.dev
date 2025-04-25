@@ -105,9 +105,6 @@
 <SEO />
 
 <svelte:head>
-	
-	<!-- Add Fira Code font for terminal -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fira-code@6.2.0/distr/fira_code.css">
 	<style>
 		:root {
 			--font-mono: 'Fira Code', monospace;
