@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { TocItem } from '$lib/utils/markdown';
   import TableOfContents from './TableOfContents.svelte';
   import { ListCollapse } from 'lucide-svelte';
   import { onMount } from 'svelte';

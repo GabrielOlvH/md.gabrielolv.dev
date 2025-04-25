@@ -49,8 +49,8 @@ type PostEntry = {
 const modules = import.meta.glob('/posts/*.md', { as: 'raw', eager: true })
 
 // build everything exactly once at startup / build time
-const allEntries: PostEntry[] = await Promise.all(
-  Object.entries(modules).map(async ([path, raw]) => {
+const allEntries: PostEntry[] =
+  Object.entries(modules).map(([path, raw]) => {
     const filename = path.split('/').pop()!
     const fileLocale = getLocaleFromFilename(filename) ?? defaultLocale
     const original = filename.replace(/\.mdx?$/, '')
@@ -78,11 +78,10 @@ const allEntries: PostEntry[] = await Promise.all(
     }
 
     // here’s the only difference:
-    const { html, toc } = await markdownToHtml(content)
+    const { html, toc } = markdownToHtml(content)
 
     return { metadata, html, toc }
   })
-)
 
 // build your two lookup tables
 const postsByLocale =  allEntries.reduce(

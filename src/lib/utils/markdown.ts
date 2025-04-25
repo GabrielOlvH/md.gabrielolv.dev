@@ -19,9 +19,9 @@ export interface TocItem {
  * Turn markdown → { html, toc }
  * toc is an array of all h2–h4 in document order.
  */
-export async function markdownToHtml(
+export function markdownToHtml(
   markdown: string
-): Promise<{ html: string; toc: TocItem[] }> {
+): { html: string; toc: TocItem[] } {
   const toc: TocItem[] = []
 
   const processor = unified()
@@ -60,6 +60,6 @@ export async function markdownToHtml(
     .use(rehypeHighlight)    // highlight.js
     .use(rehypeStringify)    // → HTML string
 
-  const file = await processor.process(markdown)
+  const file = processor.processSync(markdown)
   return { html: String(file), toc }
 }
