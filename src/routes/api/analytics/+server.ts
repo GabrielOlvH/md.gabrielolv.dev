@@ -1,5 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
-export const POST: RequestHandler = async({ request, platform }) => {
+
+export const POST: RequestHandler = async({ request, platform, cookies }) => {
   try {
     if (!platform?.env?.BLOG_ANALYTICS) {
       return new Response(JSON.stringify({ error: 'Analytics not available' }), {
@@ -18,10 +19,28 @@ export const POST: RequestHandler = async({ request, platform }) => {
       });
     }
 
-    // Write data point to Cloudflare Analytics Engine
+    // Handle unique visitor tracking
+    const visitorId = data.visitorId || '';
+    const path = data.blobs[0] || '';
+    const isUnique = data.isUnique || false;
+    
+    // Extract post slug if this is a post page
+    const postSlug = extractPostSlug(path);
+    
+    // Add post slug to blobs if available
+    if (postSlug) {
+      data.blobs.push(postSlug); // Add post slug as an additional dimension
+    }
+    
+    // Track both total views and unique views
     platform.env.BLOG_ANALYTICS.writeDataPoint({
       blobs: data.blobs,
-      doubles: data.doubles,
+      doubles: [
+        data.doubles[0], // View count
+        data.doubles[1], // Page load time
+        isUnique ? 1 : 0, // Is this a unique view? (1 for yes, 0 for no)
+        postSlug ? 1 : 0  // Is this a post view? (1 for yes, 0 for no)
+      ],
       indexes: data.indexes
     });
 
@@ -36,4 +55,13 @@ export const POST: RequestHandler = async({ request, platform }) => {
       headers: { 'Content-Type': 'application/json' }
     });
   }
+}
+
+/**
+ * Extract post slug from URL path
+ * Example: /en/posts/my-post -> my-post
+ */
+function extractPostSlug(path: string): string | null {
+  const match = path.match(/\/[^/]+\/posts\/([^/]+)/);
+  return match ? match[1] : null;
 }
