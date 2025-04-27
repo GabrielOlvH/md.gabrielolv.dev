@@ -17,7 +17,7 @@
 	"analytics_engine_datasets": [
 		{
 			"binding": "BLOG_ANALYTICS",
-			"dataset": "blog_pageviews"
+			"dataset": "blog_analytics"
 		}
 	]
 	/**
