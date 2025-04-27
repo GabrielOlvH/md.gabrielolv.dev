@@ -8,7 +8,13 @@
     "readMore": "Leia mais",
     "noPostsYet": "Ainda não há posts. Volte em breve!",
     "footer": "© {year} Gabriel Olv. Todos os direitos reservados.",
-    "backToHome": "Voltar para o início"
+    "backToHome": "Voltar para o início",
+    "back_home": "Voltar para o início"
+  },
+  "resume": {
+    "title": "Meu Currículo",
+    "description": "Visualize e baixe meu currículo profissional em múltiplos idiomas",
+    "intro": "Aqui você pode visualizar e baixar meu currículo profissional em inglês e português. Sinta-se à vontade para entrar em contato se tiver alguma dúvida ou quiser discutir potenciais oportunidades."
   },
   "about": {
     "title": "Sobre Mim",

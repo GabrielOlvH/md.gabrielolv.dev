@@ -8,7 +8,13 @@
     "readMore": "Read more",
     "noPostsYet": "No posts yet. Check back soon!",
     "footer": " {year} Gabriel Olv. All rights reserved.",
-    "backToHome": "Back to home"
+    "backToHome": "Back to home",
+    "back_home": "Back to home"
+  },
+  "resume": {
+    "title": "My Resume",
+    "description": "View and download my professional resume in multiple languages",
+    "intro": "Here you can view and download my professional resume in both English and Portuguese. Feel free to reach out if you have any questions or would like to discuss potential opportunities."
   },
   "about": {
     "title": "About Me",

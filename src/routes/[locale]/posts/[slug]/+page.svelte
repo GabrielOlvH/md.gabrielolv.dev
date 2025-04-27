@@ -115,27 +115,32 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          blobs: [
-            location.pathname,
-            eventType,
-            post.metadata.slug,
-            eventData.milestone || '',
-            navigator.language
-          ],
+          eventType,
+          path: location.pathname,
+          language: navigator.language,
+          postSlug: post.metadata.slug,
           doubles: [
             1, // Count
             timeSpentSeconds,
             maxScrollPercentage,
             interactionEvents
           ],
-          indexes: [
-            localStorage.getItem('blog_visitor_id') || crypto.randomUUID()
+          blobs: [
+            post.metadata.slug,
+            eventData.milestone || '',
+            eventData.link_url || '',
+            eventData.code_language || ''
           ],
-          eventType,
+          isUnique: !localStorage.getItem(`blog_viewed_${post.metadata.slug}`),
           eventData
         }),
         keepalive: true
       });
+
+      // Mark post as viewed for this visitor
+      if (eventType === 'post_view') {
+        localStorage.setItem(`blog_viewed_${post.metadata.slug}`, 'true');
+      }
     } catch (error) {
       console.error('Failed to send analytics event:', error);
     }

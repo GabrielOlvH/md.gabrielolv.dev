@@ -8,7 +8,7 @@
   const locale = $derived(page.params.locale);
 
   // Directory structure
-  const fileSystem = {
+  const fileSystem = $derived({
     '/': {
       type: 'directory',
       children: {
@@ -16,10 +16,15 @@
         'contact': { type: 'directory', icon: Mail, description: 'Contact form' },
         'projects': { type: 'directory', icon: Briefcase, description: 'Personal and professional projects' },
         'posts': { type: 'directory', icon: FilePen, description: 'Blog posts and articles', children: {} },
-        'resume.pdf': { type: 'file', icon: FileText, description: 'My resume', url: '/resume.pdf' }
+        'resume': {
+          type: 'directory',
+          icon: FileText,
+          description: 'My resume',
+          url: `/${locale}/resume`
+        }
       }
     }
-  };
+  });
 
   // Breadcrumbs
   function getBreadcrumbs() {
