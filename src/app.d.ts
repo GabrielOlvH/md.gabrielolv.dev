@@ -8,9 +8,6 @@ declare global {
 			ctx: ExecutionContext
 		}
 
-		interface Locals {
-			blogAnalytics?: AnalyticsEngine;
-		}
 	}
 }
 
