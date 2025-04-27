@@ -66,32 +66,24 @@
 					localStorage.setItem('blog_viewed_pages', JSON.stringify([...viewedPages]));
 				}
 
-				// Collect analytics data
-				const analyticsData = {
-					blobs: [
-						currentPath,                      // Path
-						document.referrer || 'direct',    // Referrer
-						navigator.language,               // User language
-						window.innerWidth <= 768 ? 'mobile' : 'desktop' // Device type
-					],
-					doubles: [
-						1, // Count (for aggregation)
-						performance.now() // Page load time
-					],
-					indexes: [
-						visitorId // Use visitor ID for sampling
-					],
-					visitorId,
-					isUnique
-				};
-				
 				// Send analytics data to our API endpoint
 				await fetch('/api/analytics', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify(analyticsData),
+					body: JSON.stringify({
+						eventType: 'page_view',
+						path: currentPath,
+						language: navigator.language,
+						doubles: [1, performance.now()],
+						blobs: [
+							document.referrer || 'direct',
+							window.innerWidth <= 768 ? 'mobile' : 'desktop'
+						],
+						isUnique,
+						visitorId
+					}),
 					// Don't wait for response to avoid blocking
 					keepalive: true
 				});
