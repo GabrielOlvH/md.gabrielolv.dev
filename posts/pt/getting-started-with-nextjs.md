@@ -80,4 +80,4 @@ export async function getServerSideProps(context) {
 
 O Next.js proporciona uma excelente experiência de desenvolvimento com todos os recursos necessários para produção. É uma ótima escolha para construir aplicações web modernas, seja você um iniciante ou um desenvolvedor experiente.
 
-Em posts futuros, exploraremos recursos mais avançados do Next.js, como rotas de API, autenticação e estratégias de implantação.
+Em posts futuros, exploraremos recursos mais avançados do Next.js, como rotas de API, autenticação e estratégias de implantação. ^cbaed4
