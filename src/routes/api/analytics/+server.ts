@@ -1,6 +1,22 @@
 import type { RequestHandler } from '@sveltejs/kit';
-
-export const POST: RequestHandler = async({ request, platform, cookies }) => {
+type AnalyticsEventData = {
+	blobs: string[];
+	doubles: number[];
+	indexes: number[];
+	eventType?: string;
+	visitorId?: string;
+	isUnique?: boolean;
+	eventData?: {
+		scroll_direction_changes?: number;
+		total_scroll_distance?: number;
+		reached_end?: boolean;
+		reached_middle?: boolean;
+		milestone?: string;
+		[key: string]: unknown; // for any extra eventData fields
+	};
+	[key: string]: unknown; // for any extra fields in the root object
+};
+export const POST: RequestHandler = async({ request, platform }) => {
   try {
     if (!platform?.env?.BLOG_ANALYTICS) {
       return new Response(JSON.stringify({ error: 'Analytics not available' }), {
@@ -9,7 +25,7 @@ export const POST: RequestHandler = async({ request, platform, cookies }) => {
       });
     }
 
-    const data = await request.json();
+    const data = await request.json() as AnalyticsEventData;
     
     // Validate required fields
     if (!data.blobs || !data.doubles || !data.indexes) {
@@ -22,7 +38,6 @@ export const POST: RequestHandler = async({ request, platform, cookies }) => {
     // Handle different types of analytics events
     const eventType = data.eventType || 'page_view';
     const path = data.blobs[0] || '';
-    const visitorId = data.visitorId || '';
     const isUnique = data.isUnique || false;
     
     // Extract post slug if this is a post page
@@ -110,6 +125,6 @@ export const POST: RequestHandler = async({ request, platform, cookies }) => {
  * Example: /en/posts/my-post -> my-post
  */
 function extractPostSlug(path: string): string | null {
-  const match = path.match(/\/[^\/]+\/posts\/([^\/]+)/);
+  const match = path.match(/\/[^/]+\/posts\/([^/]+)/);
   return match ? match[1] : null;
 }

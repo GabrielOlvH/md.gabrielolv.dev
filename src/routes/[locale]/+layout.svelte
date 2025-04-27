@@ -1,11 +1,10 @@
 <script lang="ts">
   import { locale } from '$lib/i18n/translations';
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
 
-  // Set locale based on route parameter
 	$effect(() => {
-		if ($page.params.locale) {
-			locale.set($page.params.locale);
+		if (page.params.locale) {
+			locale.set(page.params.locale);
 		}
 	})
 

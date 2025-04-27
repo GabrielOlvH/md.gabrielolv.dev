@@ -14,7 +14,11 @@
     "title": "Sobre Mim",
     "subtitle": "Conheça o desenvolvedor por trás do código",
     "intro": "Olá! Eu sou Gabriel, um desenvolvedor apaixonado com amor por criar soluções elegantes para problemas complexos.",
-    "bio": "Com vários anos de experiência em desenvolvimento web, me especializo em construir aplicações web modernas, responsivas e acessíveis. Estou constantemente aprendendo e explorando novas tecnologias para melhorar meu trabalho.",
+    "bio": "Sou apaixonado por desenvolvimento desde o 9º ano, o que me levou a explorar várias áreas da tecnologia. Ao longo dessa jornada, trabalhei em projetos que vão desde mods para Minecraft e jogos sérios até ferramentas e editores desenvolvidos em Rust e bibliotecas em Kotlin. Essa diversidade me permitiu adquirir conhecimentos sólidos tanto em desenvolvimento de jogos quanto em aplicações práticas de software.",
+    "experience": "Trabalhando em ambientes dinâmicos, aprendi sobre trabalho em equipe, comunicação eficaz e resolução criativa de problemas sob prazos apertados. Nessas experiências, tive a oportunidade de contribuir para o desenvolvimento de sistemas inovadores, como mods para eventos e plataformas integradas de missões, além de colaborar em projetos que combinam entretenimento e educação.",
+    "current_focus": "Atualmente, estou focado na área de Inteligência Artificial, trabalhando no desenvolvimento de uma biblioteca multi-agente para LLMs usando Kotlin. Este projeto reflete minha ambição de integrar tecnologias emergentes e construir ferramentas que possam impulsionar a inovação no setor.",
+    "frontend_skills": "Tenho experiência com tecnologias front-end, trabalhando com React, TypeScript, Tailwind CSS e muitas outras ferramentas, o que me proporciona uma visão abrangente e integrada para o desenvolvimento de soluções robustas e modernas.",
+    "vision": "Além de todo esse background técnico, sonho em transformar ideias inovadoras em produtos impactantes. Essa combinação de paixão, aprendizado contínuo e visão estratégica me motiva a buscar sempre novos desafios e contribuir para o avanço tecnológico, seja no setor de jogos, educação ou aplicação de IA.",
     "skills": "Habilidades & Especialidades",
     "interests": "Quando não estou codando, você pode me encontrar explorando novas tecnologias, contribuindo para projetos open source ou aproveitando atividades ao ar livre.",
     "connect": "Vamos Conectar"
@@ -29,12 +33,70 @@
     "socialConnect": "Conecte-se comigo nas redes sociais",
     "or": "ou",
     "emailMe": "Envie-me um email diretamente",
-    "response": "Responderei o mais rápido possível!"
+    "response": "Responderei o mais rápido possível!",
+    "availability": "Disponibilidade & Tempo de Resposta",
+    "expertise": "Áreas de Especialização",
+    "availability_details": "Normalmente respondo a todas as consultas dentro de 24-48 horas. Estou disponível para trabalho remoto e consultorias em todo o mundo, e aberto tanto a projetos de curto prazo quanto a colaborações de longo prazo."
   },
   "nav": {
     "home": "Início",
     "about": "Sobre",
     "contact": "Contato",
-    "posts": "Artigos"
+    "posts": "Artigos",
+    "projects": "Projetos"
+  },
+  "projects": {
+    "title": "Projetos",
+    "subtitle": "Uma mostra dos meus projetos pessoais e profissionais",
+    "intro": "Aqui está uma coleção de projetos nos quais trabalhei ao longo dos anos. Estes variam de mods para Minecraft a ferramentas, bibliotecas e websites.",
+    "more_info": "Procurando por mais?",
+    "github_info": "Confira meu perfil no GitHub para mais projetos e contribuições para o código aberto.",
+    "industrial_revolution": {
+      "title": "Industrial Revolution",
+      "desc": "Um mod industrial para Minecraft que adiciona várias máquinas, ferramentas, minérios e novas mecânicas"
+    },
+    "multiple_minecraft_mods": {
+      "title": "Múltiplos Mods para Minecraft",
+      "desc": "Múltiplos mods para Minecraft como Wireless Networks, Carrier e Mo' Colors. Também dou suporte a mods feitos por um amigo que não trabalha mais neles"
+    },
+    "the_castor_odyssey": {
+      "title": "The Castor Odyssey",
+      "desc": "Um jogo sério contendo vários mini jogos baseados no Desafio Internacional Bebras de Informática para ensinar Pensamento Computacional em realidade virtual"
+    },
+    "pokemon_tcg_replay": {
+      "title": "Pokémon TCG Replay",
+      "desc": "Um software de replay em desenvolvimento feito em Unity para ler logs pós-jogo do Pokémon TCG Live e simular as partidas"
+    },
+    "cafeteria_development_website": {
+      "title": "Site da Cafeteria Development",
+      "desc": "Um site para mostrar e adicionar documentação para mods criados por mim e um grupo de amigos"
+    },
+    "simple_text_editor": {
+      "title": "Editor de Texto Simples",
+      "desc": "Um editor de texto simples feito em Rust"
+    }
+  },
+  "experience": {
+    "title": "Experiência & Educação",
+    "quackity_studios": {
+      "title": "Quackity Studios",
+      "desc": "<p>Entrei na Quackity Studios em setembro de 2023 e saí em janeiro de 2024.<br/>Nos primeiros meses, participei do desenvolvimento de uma série de mini-jogos para um futuro evento de Olimpíadas. <ul><li>One-Hit Man</li><li>Jump To Victory</li><li>Laser Tag</li></ul>Nenhum desses mini-jogos acabou sendo usado, pois a empresa se dissolveu antes do evento.<br/>Após algumas semanas, fui solicitado a ajudar no desenvolvimento de um mod que simularia Desastres Naturais no Minecraft para um evento diferente que aconteceria em breve. Junto com o mod de Desastres Naturais, fui solicitado a trabalhar em um sistema de Missões, contendo vários recursos como:<ul><li>Missões diárias pessoais</li><li>Contratos globais diários</li><li>Equipes de missão para eventos</li><li>Sistema de loja personalizável</li></ul>Todos esses recursos foram solicitados com muito pouco aviso prévio e desenvolvidos no período de 3 dias.<br/>Este sistema de missão e loja continuou sendo usado no servidor principal por um tempo e na segunda vez que o evento aconteceu.<br/>Trabalhando aqui, aprendi mais a trabalhar como parte de uma equipe, como me comunicar de forma mais eficaz com os membros da equipe, como encontrar soluções criativas para problemas difíceis e como contornar limitações.</p>"
+    },
+    "bisect_hosting": {
+      "title": "Bisect Hosting",
+      "desc": "<p>Entrei na Bisect Hosting em setembro de 2023 e tenho trabalhado no mesmo projeto desde então.<br/>Me candidatei através de um formulário anunciado no servidor Discord deles e fui contatado e entrevistado logo depois. O projeto que me pediram para desenvolver ainda não foi lançado.</p>"
+    },
+    "ic": {
+      "title": "The Castor Odyssey",
+      "desc": "<p>Este projeto começou em agosto de 2023 e está em desenvolvimento ativo com o objetivo de ser usado em escolas para promover o Pensamento Computacional aos alunos.<br/>Para este projeto, fiz um curso rápido de Unity de um membro do GRVA (Grupo de Realidade Virtual e Aumentada) que durou algumas semanas. The Castor Odyssey é um projeto de iniciação científica da UFU (Universidade Federal de Uberlândia) que foi brevemente descrito como \"Um Jogo Customizável Estilo Escape Baseado na Categorização do Pensamento Computacional\" no artigo submetido ao CISTI (Conferência Ibérica de Sistemas e Tecnologias de Informação).<br/>O jogo é uma série de mini-jogos baseados em exercícios do Desafio Bebras, e completar cada mini-jogo fornecerá ao jogador um item para um piquenique que acontece na floresta, onde muitas espécies de animais participarão. Cada mini-jogo foi desenvolvido em equipes de dois.<br/>O mini-jogo que participei do desenvolvimento é baseado no reconhecimento de padrões, onde o jogador deve analisar três sanduíches e seus ingredientes descritos por letras e encontrar a combinação de ingredientes solicitada por um dos animais.</p>"
+    },
+    "college": {
+      "title": "Universidade Federal de Uberlândia",
+      "desc": "<p>Entrei na faculdade no segundo semestre de 2021 e tenho previsão de me formar em 2025.<br/></p>"
+    },
+    "free_lancing": {
+      "title": "Trabalho Freelance",
+      "desc": "<p>Desenvolvi vários projetos para um youtuber</p>"
+    }
   }
 }

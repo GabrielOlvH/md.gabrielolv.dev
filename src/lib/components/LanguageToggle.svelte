@@ -1,30 +1,27 @@
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
   import { goto } from '$app/navigation';
+  import { locale } from '$lib/i18n/translations';
   
   const supportedLocales = ['en', 'pt'];
-  let currentLocale = 'en';
-  
-  $: {
-    // Extract locale from URL path
-    const pathParts = $page.url.pathname.split('/');
+
+  $effect(() => {
+    const pathParts = page.url.pathname.split('/');
     const localeInPath = pathParts[1];
-    
+
     if (supportedLocales.includes(localeInPath)) {
-      currentLocale = localeInPath;
+      locale.set(localeInPath);
     } else {
-      currentLocale = 'en'; // Default to English
+      locale.set('en');
     }
-  }
-  
+  })
+
   function toggleLanguage() {
-    const newLocale = currentLocale === 'en' ? 'pt' : 'en';
-    
-    // Get current path without locale prefix
-    const pathParts = $page.url.pathname.split('/');
+    const newLocale = $locale === 'en' ? 'pt' : 'en';
+
+    const pathParts = page.url.pathname.split('/');
     const pathWithoutLocale = pathParts.slice(2).join('/');
-    
-    // Navigate to the same page with new locale
+
     goto(`/${newLocale}/${pathWithoutLocale}`);
   }
 </script>
@@ -32,9 +29,9 @@
 <button
   aria-label="Toggle language"
   class="language-toggle"
-  on:click={toggleLanguage}
+  onclick={toggleLanguage}
 >
-  <span>{currentLocale === 'en' ? 'PT' : 'EN'}</span>
+  <span>{$locale === 'en' ? 'PT' : 'EN'}</span>
 </button>
 
 <style>

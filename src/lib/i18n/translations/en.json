@@ -14,7 +14,11 @@
     "title": "About Me",
     "subtitle": "Get to know the developer behind the code",
     "intro": "Hi there! I'm Gabriel, a passionate developer with a love for creating elegant solutions to complex problems.",
-    "bio": "With several years of experience in web development, I specialize in building modern, responsive, and accessible web applications. I'm constantly learning and exploring new technologies to improve my craft.",
+    "bio": "I have been passionate about development since the 9th grade, which drove me to explore various areas of technology. Throughout this journey, I have worked on projects ranging from Minecraft mods and serious games to tools and editors developed in Rust and libraries in Kotlin. This diversity has allowed me to acquire solid knowledge in both game development and practical software applications.",
+    "experience": "Working in dynamic environments, I learned about teamwork, effective communication, and creative problem-solving under tight deadlines. In these experiences, I had the opportunity to contribute to the development of innovative systems, such as mods for events and integrated mission platforms, as well as collaborate on projects that combine entertainment and education.",
+    "current_focus": "Currently, I am focusing on the field of Artificial Intelligence, working on the development of a multi-agent library for LLMs using Kotlin. This project reflects my ambition to integrate emerging technologies and build tools that can drive innovation in the sector.",
+    "frontend_skills": "I have experience with front-end technologies, working with React, TypeScript, Tailwind CSS, and many other tools, which provides me with a comprehensive and integrated view for developing robust and modern solutions.",
+    "vision": "In addition to all this technical background, I dream of transforming innovative ideas into impactful products. This combination of passion, continuous learning, and strategic vision motivates me to always seek new challenges and contribute to technological advancement, whether in the gaming sector, education, or the application of AI.",
     "skills": "Skills & Expertise",
     "interests": "When I'm not coding, you can find me exploring new technologies, contributing to open source projects, or enjoying outdoor activities.",
     "connect": "Let's Connect"
@@ -29,12 +33,70 @@
     "socialConnect": "Connect with me on social media",
     "or": "or",
     "emailMe": "Send me an email directly",
-    "response": "I'll get back to you as soon as possible!"
+    "response": "I'll get back to you as soon as possible!",
+    "availability": "Availability & Response Time",
+    "expertise": "Areas of Expertise",
+    "availability_details": "I typically respond to all inquiries within 24-48 hours. I'm available for remote work and consultations worldwide, and open to both short-term projects and long-term collaborations."
   },
   "nav": {
     "home": "Home",
     "about": "About",
     "contact": "Contact",
-    "posts": "Posts"
+    "posts": "Posts",
+    "projects": "Projects"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "A showcase of my personal and professional projects",
+    "intro": "Here's a collection of projects I've worked on over the years. These range from Minecraft mods to tools, libraries, and websites.",
+    "more_info": "Looking for more?",
+    "github_info": "Check out my GitHub profile for more projects and contributions to open source.",
+    "industrial_revolution": {
+      "title": "Industrial Revolution",
+      "desc": "An industrial mod for Minecraft that adds several machines, tools, ores and new mechanics"
+    },
+    "multiple_minecraft_mods": {
+      "title": "Multiple Minecraft Mods",
+      "desc": "Multiple minecraft mods such as Wireless Networks, Carrier and Mo' Colors. I also support mods made by a friend that no longer works on them"
+    },
+    "the_castor_odyssey": {
+      "title": "The Castor Odyssey",
+      "desc": "A serious game containing several mini games based on the International Bebras Challenge on Informatics to teach Computational Thinking in virtual reality"
+    },
+    "pokemon_tcg_replay": {
+      "title": "Pokémon TCG Replay",
+      "desc": "A WIP replay software made in Unity to be able to read post game Pokémon TCG Live logs and simulates the games"
+    },
+    "cafeteria_development_website": {
+      "title": "Cafeteria Development Website",
+      "desc": "A website to showcase and add documentation for mods created by me and a group of friends"
+    },
+    "simple_text_editor": {
+      "title": "Simple Text Editor",
+      "desc": "A simple text editor made in Rust"
+    }
+  },
+  "experience": {
+    "title": "Experience & Education",
+    "quackity_studios": {
+      "title": "Quackity Studios",
+      "desc": "<p>I joined Quackity Studios in September 2023 and left in January 2024.<br/>For the first couple of months, I participated in developing a series of mini-games for a future Olympics event. <ul><li>One-Hit Man</li><li>Jump To Victory</li><li>Laser Tag</li></ul>None of these mini-games ended up being used, as the company had dissolved before the event.<br/>After a few weeks, I was asked to help in the development of a mod that would simulate Natural Disasters in Minecraft for a different event that would take place very soon. Alongside the Natural Disasters mod, I was asked to work on a Mission system, containing several features such as:<ul><li>Daily personal missions</li><li>Daily global contracts</li><li>Mission teams for events</li><li>Customizable shop system</li></ul>All of these features were requested on very short notice and developed in the span of 3 days.<br/>This mission and shop system continued to be used on the main server for a while and in the second time the event happened.<br/>Working here, I learned more to work as part of a team, how to communicate more effectively with team members, how to find creative solutions to difficult problems and work around limitations.</p>"
+    },
+    "bisect_hosting": {
+      "title": "Bisect Hosting",
+      "desc": "<p>I joined Bisect Hosting in September 2023 and have been working on the same project since.<br/>I applied through a form announced in their Discord server and was contacted and interviewed shortly after.The project I was requested to develop is not released yet.</p>"
+    },
+    "ic": {
+      "title": "The Castor Odyssey",
+      "desc": "<p>This project started on August 2023 and is in active development with the goal of being used in schools to promote Computational Thinking to students.<br/>For this project, I took a quick Unity course from a member of GRVA (Virtual and Augmented Reality Group) that lasted a few weeks. The Castor Odyssey is scientific initiation project from UFU (Federal University of Uberlândia) which was shortly described as \"A Customizable Escape Game-Like Based on Computational Thinking Categorization\" in the paper submitted to CISTI (Iberian Conference on Information Systems and Technology).<br/>The game is a series of mini-games based on exercises from the Bebras Challenge, and completing each mini-game will provide the player with an item for a picnic taking place in the forest, where many species of animals will attend. Each mini-game was developed in teams of two.<br/>The mini-game I participaed in developing is founded on pattern recognition, where the player must analyse three sandwiches and their ingredients described by letters and find the combination of ingredients requested by one of the animals.</p>"
+    },
+    "college": {
+      "title": "Federal University of Uberlândia",
+      "desc": "<p>I joined college in the second semester of 2021 and am expected to graduate in 2025.<br/></p>"
+    },
+    "free_lancing": {
+      "title": "Free Lancing",
+      "desc": "<p>I have developed several projects for a youtuber</p>"
+    }
   }
 }
