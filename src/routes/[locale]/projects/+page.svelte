@@ -72,7 +72,7 @@
   canonical={`https://md.gabrielolv.dev/${page.params.locale}/projects`}
 />
 
-<main class="min-h-screen sm:py-10">
+<main class="min-h-screen flex items-center sm:py-10">
   <div class="relative max-w-4xl mx-auto sm:px-8">
     <div class="content-container rounded-lg shadow-xl p-0 sm:p-0">
       <ProjectsFileExplorer 

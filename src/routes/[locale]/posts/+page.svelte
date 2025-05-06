@@ -16,8 +16,8 @@
   canonical={`https://md.gabrielolv.dev/${page.params.locale}/posts`}
 />
 
-<main class="min-h-screen sm:py-10">
-  <div class="max-w-3xl mx-auto sm:px-8">
+<main class="min-h-screen flex items-center sm:py-10">
+  <div class="max-w-3xl mx-auto w-full sm:px-8">
     <div class="content-container rounded-lg shadow-md p-6 sm:p-8">
 
       <PostsFileExplorer {posts} />
