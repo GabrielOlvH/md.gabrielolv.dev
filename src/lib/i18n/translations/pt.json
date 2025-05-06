@@ -1,13 +1,13 @@
 {
   "home": {
-    "title": "Blog de Tecnologia do Gabriel",
+    "title": "md.gabrielolv.dev",
     "subtitle": "Reflexões sobre código, tecnologia e desenvolvimento de software"
   },
   "common": {
     "minRead": "min de leitura",
     "readMore": "Leia mais",
     "noPostsYet": "Ainda não há posts. Volte em breve!",
-    "footer": "© {year} Gabriel Olv. Todos os direitos reservados.",
+    "footer": "© {year} Gabriel Henrique de Oliveira.",
     "backToHome": "Voltar para o início",
     "back_home": "Voltar para o início"
   },
