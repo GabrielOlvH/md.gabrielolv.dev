@@ -53,7 +53,7 @@
           <a 
             href={`/${resumeFile}`} 
             download={fileName}
-            on:click={trackDownload}
+            onclick={trackDownload}
             class="flex items-center gap-2 px-6 py-3  text-white rounded-md  transition-colors"
           >
             <Download size={18} />

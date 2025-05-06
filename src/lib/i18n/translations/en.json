@@ -26,23 +26,12 @@
     "frontend_skills": "I have experience with front-end technologies, working with React, TypeScript, Tailwind CSS, and many other tools, which provides me with a comprehensive and integrated view for developing robust and modern solutions.",
     "vision": "In addition to all this technical background, I dream of transforming innovative ideas into impactful products. This combination of passion, continuous learning, and strategic vision motivates me to always seek new challenges and contribute to technological advancement, whether in the gaming sector, education, or the application of AI.",
     "skills": "Skills & Expertise",
-    "interests": "When I'm not coding, you can find me exploring new technologies, contributing to open source projects, or enjoying outdoor activities.",
     "connect": "Let's Connect"
   },
   "contact": {
     "title": "Get in Touch",
     "subtitle": "I'd love to hear from you!",
-    "formName": "Name",
-    "formEmail": "Email",
-    "formMessage": "Message",
-    "formSubmit": "Send Message",
-    "socialConnect": "Connect with me on social media",
-    "or": "or",
-    "emailMe": "Send me an email directly",
-    "response": "I'll get back to you as soon as possible!",
-    "availability": "Availability & Response Time",
-    "expertise": "Areas of Expertise",
-    "availability_details": "I typically respond to all inquiries within 24-48 hours. I'm available for remote work and consultations worldwide, and open to both short-term projects and long-term collaborations."
+    "intro": "I typically respond to all inquiries within 24 hours. I'm available for remote work and consultations worldwide, and open to both short-term projects and long-term collaborations."
   },
   "nav": {
     "home": "Home",
@@ -65,7 +54,7 @@
       "title": "Multiple Minecraft Mods",
       "desc": "Multiple minecraft mods such as Wireless Networks, Carrier and Mo' Colors. I also support mods made by a friend that no longer works on them"
     },
-    "the_castor_odyssey": {
+    "castor_odyssey": {
       "title": "The Castor Odyssey",
       "desc": "A serious game containing several mini games based on the International Bebras Challenge on Informatics to teach Computational Thinking in virtual reality"
     },
@@ -77,9 +66,13 @@
       "title": "Cafeteria Development Website",
       "desc": "A website to showcase and add documentation for mods created by me and a group of friends"
     },
-    "simple_text_editor": {
-      "title": "Simple Text Editor",
-      "desc": "A simple text editor made in Rust"
+    "kaia": {
+      "title": "KAIA (Kotlin AI Agents)",
+      "desc": "A Kotlin Multiplatform lib for creating multi-agent systems using LLMs."
+    },
+    "blog": {
+      "title": "My portfolio",
+      "desc": "This website! I made it using Svelte & SvelteKit as a learning project."
     }
   },
   "experience": {

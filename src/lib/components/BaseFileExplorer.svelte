@@ -1,63 +1,61 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { ArrowUp } from 'lucide-svelte';
+  import { ArrowUp, ExternalLink as ExternalLinkIcon, Folder, FileText as DefaultFileTextIcon } from 'lucide-svelte'; 
   import { onMount } from 'svelte';
-  import type { SvelteComponent } from 'svelte';
 
-  export let fileSystem: any;
-  export let currentPath: string;
-  export let locale: string;
-  export let onNavigate: (path: string) => void = (path) => goto(path);
-  export let breadcrumbs: { name: string, path: string }[] = [];
+  // Using Svelte 5 Runes syntax for props
+  let { 
+    fileSystem,
+    currentPath,
+    locale,
+    onNavigate = (path: string) => goto(path), // Default value
+    breadcrumbs = [], // Default value
+    isProjectExplorer = false // Default value
+  }: {
+    fileSystem: any;
+    currentPath: string;
+    locale: string;
+    onNavigate?: (path: string) => void; // Optional due to default
+    breadcrumbs?: { name: string, path: string }[]; // Optional due to default
+    isProjectExplorer?: boolean; // Optional due to default
+  } = $props();
 
   let isMobile = false;
   let urlDisplayElement: HTMLElement;
 
   onMount(() => {
-    // Check if we're on mobile
     isMobile = window.innerWidth < 640;
-    
-    // Add resize listener
     const handleResize = () => {
       isMobile = window.innerWidth < 640;
     };
-    
     window.addEventListener('resize', handleResize);
-    
-    // Scroll to the end of the path display
     if (urlDisplayElement) {
       urlDisplayElement.scrollLeft = urlDisplayElement.scrollWidth;
     }
-    
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   });
 
-  // Get current directory content
   function getCurrentDirContent() {
-    // Remove locale from path for directory lookup
     const pathWithoutLocale = currentPath.replace(`/${locale}`, '') || '/';
-    const segments = pathWithoutLocale.split('/').filter(segment => segment.length > 0);
-    let current = fileSystem['/'];
-
-    // Handle root directory
-    if (segments.length === 0) {
-      return Object.entries(current.children).map(([name, info]) => ({
-        name,
-        ...info
-      }));
+    let current = fileSystem[pathWithoutLocale] || fileSystem['/']; 
+    
+    if (fileSystem[currentPath]) {
+        current = fileSystem[currentPath];
+    } else {
+        const segments = pathWithoutLocale.split('/').filter(segment => segment.length > 0);
+        current = fileSystem['/']; 
+        for (const segment of segments) {
+            if (current && current.children && current.children[segment]) {
+                current = current.children[segment];
+            } else {
+                return []; 
+            }
+        }
     }
 
-    // Traverse directories
-    for (const segment of segments) {
-      if (current.children && current.children[segment]) {
-        current = current.children[segment];
-      } else {
-        return [];
-      }
-    }
-    if (current.type === 'directory') {
+    if (current && current.type === 'directory') {
       return Object.entries(current.children || {}).map(([name, info]) => ({
         name,
         ...info
@@ -70,75 +68,82 @@
     if (item.type === 'directory') {
       onNavigate(item.path || `${currentPath}/${item.name}`);
     } else if (item.type === 'file' && item.url) {
-      onNavigate(item.url);
+      if (item.external) {
+        window.open(item.url, '_blank');
+      } else {
+        onNavigate(item.url);
+      }
     }
   }
   
-  // Function to get the display name for a breadcrumb
   function getBreadcrumbDisplay(crumb: { name: string, path: string }, index: number) {
     if (!isMobile || breadcrumbs.length <= 2) {
       return crumb.name;
     }
-    
-    // On mobile with more than 2 breadcrumbs
     if (index === 0) {
-      // Always show the first segment as "..."
       return "...";
     } else if (index < breadcrumbs.length - 1) {
-      // For middle segments, show "..." except for the last one
       return "...";
     } else {
-      // For the last segment (current page), show the full name
       return crumb.name;
     }
   }
 </script>
 
 <div class="file-explorer">
-  <!-- URL/Path display -->
   <div class="url-display-container">
     <div class="url-display" bind:this={urlDisplayElement}>
       <span class="domain">md.gabrielolv.dev</span>
-      {#each breadcrumbs as crumb, i}
+      {#each breadcrumbs as crumb, i (i)}
         <span class="sep">/</span>
-        <span class="breadcrumb {i === breadcrumbs.length - 1 ? 'current' : ''}" on:click={() => onNavigate(crumb.path)}>
+        <button class="breadcrumb {i === breadcrumbs.length - 1 ? 'current' : ''}" onclick={() => onNavigate(crumb.path)}>
           {getBreadcrumbDisplay(crumb, i)}
-        </span>
+        </button>
       {/each}
     </div>
     <div class="language-toggle-container">
-      <slot></slot>
+      <slot></slot> 
     </div>
   </div>
 
-  <!-- Directory content -->
+  <slot name="header-controls"></slot>
+
   <div class="directory-content">
-    {#if breadcrumbs.length > 1}
+    {#if breadcrumbs.length > 1} 
       <div class="directory-item go-up" role="button" tabindex="0" aria-label="Go up one level"
-        on:click={() => onNavigate(breadcrumbs[breadcrumbs.length-2].path)}
-        on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') onNavigate(breadcrumbs[breadcrumbs.length-2].path); }}>
+        onclick={() => onNavigate(breadcrumbs[breadcrumbs.length-2].path)}
+        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') onNavigate(breadcrumbs[breadcrumbs.length-2].path); }}>
         <span class="item-icon"><ArrowUp size={18} /></span>
-        <span class="item-name">..</span>
-        <span class="item-description">Parent directory</span>
+        <div class="item-text-content"> 
+            <span class="item-name">..</span>
+            <span class="item-description">Parent directory</span>
+        </div>
       </div>
     {/if}
-    {#each getCurrentDirContent() as item}
+    {#each getCurrentDirContent() as item (item)}
       <div class="directory-item {item.type}" role="button" tabindex="0" aria-label={`Open ${item.name}`}
-        on:click={() => handleClick(item)}
-        on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(item); }}>
+        onclick={() => handleClick(item)}
+        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(item); }}>
         <span class="item-icon">
           {#if item.icon}
-            <svelte:component this={item.icon as typeof SvelteComponent} size={18} />
+            <item.icon/>
           {:else}
             {#if item.type === 'directory'}
               <Folder size={18} />
             {:else}
-              <FileText size={18} />
+              <DefaultFileTextIcon size={18} />
             {/if}
           {/if}
+          {#if item.external}
+            <ExternalLinkIcon size={14} class="external-link-indicator" />
+          {/if}
         </span>
-        <span class="item-name">{item.name}{item.type === 'directory' ? '/' : ''}</span>
-        <span class="item-description">{item.description || ''}</span>
+        <div class="item-text-content"> 
+            <span class="item-name">{item.name}{item.type === 'directory' && !isProjectExplorer ? '/' : ''}</span>
+            {#if item.description} 
+                <span class="item-description">{item.description}</span>
+            {/if}
+        </div>
       </div>
     {/each}
   </div>
@@ -241,38 +246,59 @@
   }
   .file-item, .directory-item {
     display: flex;
-    align-items: center;
-    gap: 0.5em;
-    padding: 10px 16px;
+    align-items: flex-start;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.1rem;
+    border-radius: 0.375rem;
+    transition: background-color 0.15s ease-out;
     cursor: pointer;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
-    font-family: 'Fira Code', 'Courier New', monospace;
-    color: #ffffff;
-    font-weight: 500;
   }
-  .file-item.directory, .directory-item.directory {
-    font-weight: bold;
+  .directory-item:hover {
+    background-color: rgba(55, 65, 81, 0.25);
   }
-  .file-item:hover, .directory-item:hover {
-    background-color: rgba(76, 175, 80, 0.1);
-    border-left: 3px solid #4CAF50;
+  .directory-item.go-up:hover .item-name,
+  .directory-item.file:hover .item-name, 
+  .directory-item.directory:hover .item-name {
+      color: #34d399;
   }
+
   .item-icon {
-    margin-right: 12px;
-    font-size: 18px;
-    width: 24px;
-    text-align: center;
+    margin-right: 0.85rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
   }
-  .file-name, .item-name {
-    font-family: 'Fira Code', 'Courier New', monospace;
-    color: #ffffff;
-    margin-right: 12px;
+
+  .item-text-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .item-name {
     font-weight: 500;
+    color: #e5e7eb;
+    line-height: 1.45;
+    transition: color 0.15s ease-out;
   }
+
   .item-description {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 14px;
-    margin-left: auto;
+    font-size: 0.875rem;
+    color: #9ca3af;
+    line-height: 1.5;
+    margin-top: 0.1rem;
+  }
+
+  .external-link-indicator {
+    margin-left: 4px;
+    color: #718096;
+    opacity: 0.7;
+  }
+  .directory-item:hover .external-link-indicator {
+    opacity: 1;
+    color: #2f855a;
   }
 </style>

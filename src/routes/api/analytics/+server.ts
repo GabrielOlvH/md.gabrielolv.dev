@@ -88,12 +88,3 @@ export const POST: RequestHandler = async({ request, platform }) => {
     });
   }
 }
-
-/**
- * Extract post slug from URL path
- * Example: /en/posts/my-post -> my-post
- */
-function extractPostSlug(path: string): string | null {
-  const match = path.match(/\/[^/]+\/posts\/([^/]+)/);
-  return match ? match[1] : null;
-}
