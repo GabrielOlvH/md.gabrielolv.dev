@@ -7,9 +7,9 @@
   import SEO from '$lib/components/SEO.svelte';
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-  
+
   export const { data } = $props();
-  const post = data;
+  const post = $derived(data);
   const content = $derived(data.content);
   const availableLocales = $derived(data.availableLocales);
   const items = $derived(data.toc);
