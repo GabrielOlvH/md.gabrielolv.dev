@@ -301,7 +301,7 @@
                 <a 
                   href="#{item.id}" 
                   class="toc-link {$activeId === item.id ? 'active' : ''} {item.level > 2 ? 'child-link' : 'parent-link'}"
-                  onclick|preventDefault={() => scrollToHeading(item.id)}
+                  on:click|preventDefault={() => scrollToHeading(item.id)}
                   title={item.text + (item.sectionContext ? ` (${item.sectionContext})` : '')}
                 >
                   {#if item.level > 2}
