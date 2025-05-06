@@ -5,16 +5,15 @@
   import PostLanguageSwitcher from '$lib/components/PostLanguageSwitcher.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
   import SEO from '$lib/components/SEO.svelte';
-  import { getAvailableLocalesForPost, getPostBySlug } from '$lib/utils/posts';
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-
-
-  const post = $derived(getPostBySlug(page.params.slug, page.params.locale)!);
-  const content = $derived(post.content);
-  const availableLocales = $derived(getAvailableLocalesForPost(page.params.slug));
-  const items = $derived(post.toc);
-  const formattedDate = $derived(formatDate(new Date(post.metadata.date), page.params.locale));
+  
+  export const { data } = $props();
+  const post = data;
+  const content = $derived(data.content);
+  const availableLocales = $derived(data.availableLocales);
+  const items = $derived(data.toc);
+  const formattedDate = $derived(formatDate(new Date(data.metadata.date), page.params.locale));
   
   // Analytics tracking variables
   let startTime: number;
@@ -241,7 +240,6 @@
   title={`${post.metadata.title}`}
   description={post.metadata.excerpt}
   type="article"
-  image={post.metadata.coverImage || '/images/og-image.jpg'}
   publishedTime={post.metadata.date}
   tags={post.metadata.tags}
   usePathAsTitle={true}
