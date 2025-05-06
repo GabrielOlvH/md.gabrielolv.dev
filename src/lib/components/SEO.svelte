@@ -39,7 +39,7 @@
   <meta property="og:description" content={description} />
   <meta property="og:image" content={absoluteImageUrl} />
   <meta property="og:locale" content={$page.params.locale || 'en'} />
-  <meta property="og:site_name" content="Gabriel's Tech Blog" />
+  <meta property="og:site_name" content="md.gabrielolv.dev" />
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
