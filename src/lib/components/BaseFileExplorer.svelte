@@ -1,14 +1,14 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   // Types/Interfaces exported here are available to other modules
   export interface ExplorerItem {
     name: string;
     type: 'directory' | 'file';
-    icon?: any; // Consider a more specific Svelte component type
+    icon?: any;
     description?: string;
     url?: string;
     external?: boolean;
     path?: string; 
-    children?: Record<string, Omit<ExplorerItem, 'name'>>; // For directory children
+    children?: Record<string, ExplorerItem>; 
   }
 </script>
 
@@ -52,10 +52,26 @@
   });
 
   function getCurrentDirContent(): ExplorerItem[] {
-    const pathWithoutLocale = currentPath.replace(`/${locale}`, '') || '/';
-    let currentDirData: ExplorerItem | undefined;
+    const directEntry = fileSystem[currentPath] as ExplorerItem | undefined;
+    if (directEntry && directEntry.type === 'directory' && directEntry.children) {
+      return Object.entries(directEntry.children).map(([name, childInfo]): ExplorerItem => {
+        
+        const itemPath = childInfo.path || `${currentPath}/${name.replace(/\.md$/, '')}`; 
+        return {
+          name: childInfo.name || name, 
+          type: childInfo.type || 'file', 
+          icon: childInfo.icon,
+          description: childInfo.description,
+          url: childInfo.url,
+          external: childInfo.external,
+          path: itemPath,
+          children: childInfo.children // This will also be Omit<ExplorerItem, 'name'> if passed down
+        } as ExplorerItem;
+      });
+    }
 
-    // Navigate the fileSystem to find the current directory's data
+    // 2. Fallback: Try navigating from the root ('/') for the main FileExplorer
+    const pathWithoutLocale = currentPath.replace(`/${locale}`, '') || '/';
     const segments = pathWithoutLocale.split('/').filter(Boolean);
     let tempCurrent = fileSystem['/'] as ExplorerItem;
     if (!tempCurrent) return []; // Root not found
@@ -63,80 +79,75 @@
     for (let i = 0; i < segments.length; i++) {
       const segment = segments[i];
       if (tempCurrent.type === 'directory' && tempCurrent.children && tempCurrent.children[segment]) {
-        // Create a full item for the next level before assigning to tempCurrent
         const childInfo = tempCurrent.children[segment];
-        tempCurrent = {
+        tempCurrent = { // Reconstruct the item for the next level
             name: segment, 
             type: childInfo.type,
             icon: childInfo.icon,
             description: childInfo.description,
             url: childInfo.url,
             external: childInfo.external,
-            path: childInfo.path || (tempCurrent.path ? `${tempCurrent.path}/${segment}` : `/${segment}`),
+            path: childInfo.path || (tempCurrent.path === '/' ? '/' : tempCurrent.path || '') + `/${segment}`,
             children: childInfo.children
         } as ExplorerItem;
       } else {
         return []; // Path segment not found or not a directory
       }
     }
-    currentDirData = tempCurrent;
 
-    if (currentDirData && currentDirData.type === 'directory' && currentDirData.children) {
-      return Object.entries(currentDirData.children).map(([name, info]): ExplorerItem => {
-        const itemPath = info.path || `${currentDirData!.path === '/' ? '' : currentDirData!.path}/${name}`;
+    // If traversal succeeded, use the children of the final directory
+    if (tempCurrent && tempCurrent.type === 'directory' && tempCurrent.children) {
+      return Object.entries(tempCurrent.children).map(([name, info]): ExplorerItem => {
+        const itemPath = info.path || `${tempCurrent.path === '/' ? '' : tempCurrent.path}/${name}`;
         return {
           name,
-          type: info.type,
-          icon: info.icon,
-          description: info.description,
-          url: info.url,
-          external: info.external,
-          path: itemPath,
-          children: info.children
+          ...(typeof info === 'object' && info !== null ? info : {}),
+          type: info.type || 'file', 
+          path: itemPath
         } as ExplorerItem;
       });
     }
-    return [];
+
+    return []; // Return empty if neither direct path nor traversal worked
   }
   
   function getPathForItem(item: ExplorerItem): string | null {
-    if (item.url && !item.external) return item.url;
+    // 1. Trust explicit, internal URL if provided
+    if (item.url && !item.external) {
+      // Ensure it starts with the current locale? Or assume it's correct?
+      // Let's assume item.url is correctly pre-formatted like /en/resume
+      return item.url; 
+    }
+
+    // 2. Handle main directory navigation
     if (item.type === 'directory') {
-      // Ensure path is absolute and starts with locale if not already included
-      let path = item.path || (currentPath === `/${locale}` ? `/${locale}/${item.name}` : `${currentPath}/${item.name}`);
-      if (!path.startsWith(`/${locale}`)) {
-        path = `/${locale}${path.startsWith('/') ? '' : '/'}${path}`;
-      }
-       // Normalize: remove locale prefix if currentPath already has it for relative construction
-      const baseCurrentPath = currentPath.startsWith(`/${locale}/`) ? currentPath.substring(locale.length + 1) : currentPath;
-      let constructedPath = item.path;
-      if (!constructedPath) {
-          if(baseCurrentPath === '/' || baseCurrentPath === '' || !baseCurrentPath.substring(1).includes(item.name.split('/')[0])){
-            constructedPath = `/${locale}/${item.name}`;
-          } else {
-            constructedPath = `/${locale}${baseCurrentPath}/${item.name}`;
-          }
-      }
-      
-      // Ensure the path for directories like 'about', 'posts' is /locale/item.name
-      if (!item.url && (item.name === 'about' || item.name === 'contact' || item.name === 'projects' || item.name === 'posts')) {
+      // These are the main sections defined in FileExplorer.svelte
+      const mainSections = ['about', 'contact', 'projects', 'posts', 'resume']; // Add any others
+      if (mainSections.includes(item.name)) {
+        // Always construct path from locale and item name for these
         return `/${locale}/${item.name}`;
       }
-      return constructedPath;
+      // Potentially handle nested directories here if needed, 
+      // otherwise, they might not be navigable via this function
     }
-    return item.url || null; // Return explicit URL for files if available
+
+    // 3. Not navigable via this function
+    return null; 
   }
 
   function handleClick(item: ExplorerItem) {
-    if (item.type === 'directory') {
-      onNavigate(item.path || `${currentPath}/${item.name}`);
-    } else if (item.type === 'file' && item.url) {
-      if (item.external) {
-        window.open(item.url, '_blank');
-      } else {
-        onNavigate(item.url);
-      }
-    }
+    const targetPath = getPathForItem(item);
+    
+    if (targetPath) {
+      // Use the reliably calculated path
+      onNavigate(targetPath);
+    } else if (item.url && item.external) {
+      // Handle external links
+      window.open(item.url, '_blank');
+    } 
+    // Decide what happens if it's not external and not a main directory - currently nothing.
+    // Maybe it should navigate based on item.path if that exists?
+    // else if (item.path) { onNavigate(item.path); } // Add if needed
   }
   
   function getBreadcrumbDisplay(crumb: { name: string, path: string }, index: number) {
@@ -183,7 +194,7 @@
         </div>
       </div>
     {/if}
-    {#each getCurrentDirContent() as item (item.name)}
+    {#each getCurrentDirContent() as item (item.path ?? item.name)}
       {@const targetPath = getPathForItem(item)}
 
       {#if targetPath && !item.external}
@@ -273,8 +284,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
   }
   .url-display {
     padding: 8px 12px;

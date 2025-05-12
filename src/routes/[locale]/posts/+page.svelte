@@ -1,11 +1,15 @@
 <script lang="ts">
-  import { locale, t } from '$lib/i18n/translations';
+  // import { locale, t } from '$lib/i18n/translations'; // locale will come from page data or params if needed
+  import { t } from '$lib/i18n/translations'; // Keep t for translations
   import { page } from '$app/state';
   import SEO from '$lib/components/SEO.svelte';
   import PostsFileExplorer from '$lib/components/PostsFileExplorer.svelte';
-  import { getAllPosts } from '$lib/utils/posts';
+	import { getAllPosts } from '$lib/utils/posts';
 
-  const posts = $derived(getAllPosts($locale));
+  
+  const posts = getAllPosts(page.params.locale);
+  const currentLocale = page.params.locale;
+
 
 </script>
 
@@ -13,7 +17,7 @@
   title={`${$t('nav.posts')} | Gabriel's Blog`}
   description="Explore my latest articles about web development, programming, and technology"
   type="website"
-  canonical={`https://md.gabrielolv.dev/${page.params.locale}/posts`}
+  canonical={`https://md.gabrielolv.dev/${currentLocale}/posts`}
 />
 
 <main class="min-h-screen flex items-center sm:py-10">

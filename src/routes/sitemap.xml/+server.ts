@@ -95,7 +95,7 @@ export const GET: RequestHandler = async () => {
   
   // Add PT posts that don't have an EN version
   for (const post of ptPosts) {
-    sitemap += `
+      sitemap += `
   
   <url>
     <loc>${baseUrl}/pt/posts/${post.slug}</loc>
