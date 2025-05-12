@@ -1,40 +1,51 @@
 <script lang="ts">
+
   import { page } from '$app/state';
   import BaseFileExplorer from './BaseFileExplorer.svelte';
+  import type { ExplorerItem } from './BaseFileExplorer.svelte';
   import LanguageToggle from './LanguageToggle.svelte';
-  import { Globe, Wrench, FileText, Blocks, Gamepad } from 'lucide-svelte';
+  import { projectsFileSystemByLocale } from '$lib/utils/projects';
+  import { t } from '$lib/i18n/translations';
 
-  let { projects }: { projects: any[]; } = $props();
+  type ProjectExplorerItemWithKeys = ExplorerItem & { nameKey?: string; descriptionKey?: string };
 
   const locale = $derived(page.params.locale);
   const currentPath = $derived(page.url.pathname);
 
-  const fileSystem = $derived({
-    [`/${locale}/projects`]: {
-      type: 'directory',
-      children: projects.reduce((acc, project) => {
-        acc[project.name] = {
-          type: 'file',
-          icon: getCategoryIcon(project.category),
-          description: project.description,
-          url: project.url,
-          external: true, 
-          category: project.category
+
+  const fileSystem = $derived((() => {
+    
+    const baseFileSystemForLocale = projectsFileSystemByLocale[locale] ?? {}; 
+    
+    
+    const projectsDirKey = `/${locale}/projects`;
+    const projectsDir = baseFileSystemForLocale[projectsDirKey] as ProjectExplorerItemWithKeys | undefined;
+
+
+    if (!projectsDir || !projectsDir.children) {
+      return {};
+    }
+  
+
+    const translatedChildren = Object.entries(projectsDir.children).reduce(
+      (acc, [key, item]: [string, ProjectExplorerItemWithKeys]) => {
+        acc[key] = {
+          ...item,
+          name: item.nameKey ? $t(item.nameKey) : item.name, // Fallback to item.name if key is missing
+          description: item.descriptionKey ? $t(item.descriptionKey) : item.description, // Fallback
         };
         return acc;
-      }, {}),
-    },
-  });
+      },
+      {} as Record<string, ExplorerItem>
+    );
 
-  function getCategoryIcon(category: string) {
-    switch (category) {
-      case 'websites': return Globe;
-      case 'tools': return Wrench;
-      case 'games': return Gamepad;
-      case 'minecraft': return Blocks;
-      default: return FileText;
-    }
-  }
+    return {
+      [projectsDirKey]: {
+        ...projectsDir,
+        children: translatedChildren,
+      },
+    };
+  })());
 
   const breadcrumbs = $derived([
     { name: locale, path: `/${locale}` },

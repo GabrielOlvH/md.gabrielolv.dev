@@ -1,5 +1,8 @@
 import { defaultLocale } from '$lib/i18n';
 import { markdownToHtml, type TocItem } from '$lib/utils/markdown';
+import { FileText } from 'lucide-svelte';
+import { formatDate } from '$lib/i18n/translations';
+import type { ExplorerItem } from '$lib/components/BaseFileExplorer.svelte';
 
 export interface PostMetadata {
 	slug: string;
@@ -159,3 +162,42 @@ export function getAvailableLocalesForPost(slug: string): string[] {
 export function hasTranslation(post: PostMetadata, locale: string): boolean {
 	return post.translations?.includes(locale) || false;
 }
+
+// --- START: Pre-compute file system structure for posts ---
+
+// This will be a record where the key is the locale (e.g., 'en', 'es')
+// and the value is the fileSystem object for that locale's posts.
+export const postsFileSystemByLocale = Object.entries(postsByLocale).reduce(
+	(acc, [locale, postsInLocale]) => {
+		const children = postsInLocale.reduce(
+			(postAcc: Record<string, ExplorerItem>, post: PostMetadata) => {
+				postAcc[`${post.slug}.md`] = {
+					name: post.title,
+					type: 'file',
+					icon: FileText,
+					description: `${post.excerpt} (${formatDate(new Date(post.date), locale)}, ${post.readingTime} min read)`,
+					url: `/${locale}/posts/${post.slug}`,
+					path: `/${locale}/posts/${post.slug}` // Individual post path
+				};
+				return postAcc;
+			},
+			{}
+		);
+
+		// The fileSystem object for this locale's posts section
+		// It contains a single top-level directory entry for '/${locale}/posts'
+		acc[locale] = {
+			[`/${locale}/posts`]: {
+				name: 'posts', // Name of the directory itself
+				type: 'directory',
+				path: `/${locale}/posts`, // Path to this directory
+				// icon: Folder, // Optional: if you want an icon for the 'posts' directory itself
+				children: children,
+				// Add other ExplorerItem fields if necessary, e.g., description for the 'posts' directory
+			} as ExplorerItem // Cast to ExplorerItem to satisfy the type, ensure all required fields are present
+		};
+		return acc;
+	},
+	{} as Record<string, Record<string, ExplorerItem>> // { [locale]: { [path]: ExplorerItem } }
+);
+// --- END: Pre-compute file system structure for posts ---
