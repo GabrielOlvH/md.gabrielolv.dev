@@ -9,6 +9,34 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 import { visit } from 'unist-util-visit'
 
+// Custom rehype plugin to add a class to headings
+function rehypeAddHeadingClass() {
+  return (tree: any) => {
+    visit(tree, 'element', (node: any) => {
+      if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(node.tagName)) {
+        // Ensure properties exist
+        node.properties = node.properties || {};
+        // Add the class, handling existing classes
+        const existingClasses = node.properties.className || [];
+        // Ensure existingClasses is treated as an array
+        const classesArray = Array.isArray(existingClasses) ? existingClasses : [String(existingClasses)];
+
+        // Add the new class if it's not already present
+        if (!classesArray.includes('heading-with-bar')) {
+           node.properties.className = [...classesArray, 'heading-with-bar'];
+        } else {
+           node.properties.className = classesArray; // Keep existing if class is already there
+        }
+
+        // Remove empty string class if it was added automatically
+         if (node.properties.className.length > 1 && node.properties.className[0] === '') {
+           node.properties.className.shift();
+         }
+      }
+    });
+  };
+}
+
 export interface TocItem {
   id: string
   text: string
@@ -28,7 +56,7 @@ export function markdownToHtml(
     .use(remarkParse)
     .use(remarkGfm)           // GitHub-Flavored Markdown
 
-    .use(remarkSmartypants)   // “smart” quotes, dashes, etc.
+    .use(remarkSmartypants)   // "smart" quotes, dashes, etc.
     .use(() => (tree) => {
       // extract TOC
       visit(tree, 'heading', (node: any) => {
@@ -58,6 +86,7 @@ export function markdownToHtml(
     .use(remarkRehype, { allowDangerousHtml: true }) // pass rawb HTML through
     .use(rehypeSlug)          // adds `id` to headings
     .use(rehypeRaw)
+    .use(rehypeAddHeadingClass) // Add class to headings
     .use(rehypeHighlight)    // highlight.js
     .use(rehypeStringify)    // → HTML string
 

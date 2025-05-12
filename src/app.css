@@ -2,7 +2,6 @@
 @plugin '@tailwindcss/typography';
 @import 'highlight.js/styles/atom-one-dark.css';
 
-/* Dark mode styles (now default) */
 :root {
   --color-primary: #9ed9a0;
   --color-primary-dark: #7eba80;
@@ -312,4 +311,56 @@ pre code.hljs {
 a:focus, button:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Specific Heading Bar Styles */
+.heading-with-bar {
+  position: relative;
+}
+
+.heading-with-bar::before {
+  content: '˃   ';
+
+  font-weight: bolder;
+  
+}
+
+h1.heading-with-bar::before {
+  color: var(--color-primary);
+}
+
+h2.heading-with-bar::before {
+  color: var(--color-accent);
+}
+
+h3.heading-with-bar::before {
+  color: var(--color-primary-dark);
+}
+
+h4.heading-with-bar::before, 
+h5.heading-with-bar::before, 
+h6.heading-with-bar::before {
+  color: var(--color-text-muted);
+}
+
+.prose strong {
+  
+  color: #4CAF50 !important;
+}
+
+/* Italic Text Style */
+.prose em {
+  color: var(--color-accent) !important;
+  font-style: italic;
+}
+
+/* Inline Code Style */
+/* Target code elements NOT inside pre */
+.prose > :not(pre) code {
+  color: var(--color-code) !important;
+  background-color: var(--color-code-bg) !important;
+  padding: 0.2em 0.4em;
+  border-radius: 0.3rem;
+  font-size: 0.9em; /* Slightly smaller than main text */
+  font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
 }

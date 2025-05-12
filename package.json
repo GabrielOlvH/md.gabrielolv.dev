@@ -41,6 +41,7 @@
 		"@types/node": "^22.14.1",
 		"date-fns": "^4.1.0",
 		"highlight.js": "^11.11.1",
+		"vite": "npm:rolldown-vite@latest",
 		"lucide-svelte": "^0.503.0",
 		"marked-highlight": "^2.2.1",
 		"rehype-highlight": "^7.0.2",
