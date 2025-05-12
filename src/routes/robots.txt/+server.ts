@@ -19,3 +19,5 @@ Crawl-delay: 10
     }
   });
 };
+
+export const prerender = true;

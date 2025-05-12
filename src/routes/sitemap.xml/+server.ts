@@ -1,6 +1,8 @@
 import { getAllPosts } from '$lib/utils/posts';
 import type { RequestHandler } from '@sveltejs/kit';
 
+export const prerender = true;
+
 export const GET: RequestHandler = async () => {
   // Get all posts for both languages
   const enPosts = getAllPosts('en');
@@ -93,10 +95,7 @@ export const GET: RequestHandler = async () => {
   
   // Add PT posts that don't have an EN version
   for (const post of ptPosts) {
-    // Check if this post already has an EN version (already added)
-    const enVersion = enPosts.find(p => p.slug === post.slug);
-    if (!enVersion) {
-      sitemap += `
+    sitemap += `
   
   <url>
     <loc>${baseUrl}/pt/posts/${post.slug}</loc>
@@ -105,7 +104,6 @@ export const GET: RequestHandler = async () => {
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="pt" href="${baseUrl}/pt/posts/${post.slug}" />
   </url>`;
-    }
   }
   
   // Close the sitemap
