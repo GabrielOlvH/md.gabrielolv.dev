@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import DynamicTitle from './DynamicTitle.svelte';
 
-  export let title: string = "Gabriel's Tech Blog";
+  export let title: string = "md.gabrielolv.dev";
   export let description: string = "Exploring computer science, web development, and my personal coding journey";
   export let type: string = "website";
   export let image: string = "/images/og-image.jpg"; // Default OG image

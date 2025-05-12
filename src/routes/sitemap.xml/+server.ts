@@ -3,8 +3,8 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {
   // Get all posts for both languages
-  const enPosts = await getAllPosts('en');
-  const ptPosts = await getAllPosts('pt');
+  const enPosts = getAllPosts('en');
+  const ptPosts = getAllPosts('pt');
   
   // Base URL for the site
   const baseUrl = 'https://md.gabrielolv.dev';

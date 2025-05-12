@@ -46,7 +46,7 @@ type PostEntry = {
 	toc: TocItem[];
 };
 
-const module = import.meta.glob('/posts/*/*.md', { as: 'raw', eager: true });
+const module = import.meta.glob('/posts/*/*.md', { query: '?raw', import: 'default', eager: true });
 
 // Process all posts
 const allEntries: PostEntry[] = Object.entries(module).map(([path, raw]) => {

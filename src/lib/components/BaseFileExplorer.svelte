@@ -102,7 +102,7 @@
       {/each}
     </div>
     <div class="language-toggle-container">
-      <slot></slot> 
+      <slot></slot>
     </div>
   </div>
 
@@ -293,12 +293,16 @@
   }
 
   .external-link-indicator {
-    margin-left: 4px;
-    color: #718096;
-    opacity: 0.7;
+    margin-left: 0.5rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
   }
+
+  /* Remove unused selector 
   .directory-item:hover .external-link-indicator {
     opacity: 1;
-    color: #2f855a;
   }
+  */
+
+  /* Add any necessary styles for your application */
 </style>

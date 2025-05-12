@@ -3,7 +3,7 @@
   import { page } from '$app/state';
   import SEO from '$lib/components/SEO.svelte';
   import FileExplorer from '$lib/components/FileExplorer.svelte';
-  import { User, Wrench, Github, Gamepad2 } from 'lucide-svelte';
+  import { User, Wrench, Gamepad2 } from 'lucide-svelte';
 
   const skills = [
     { name: 'Kotlin', color: '#F7DF1E' },
