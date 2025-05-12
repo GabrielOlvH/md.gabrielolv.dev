@@ -1,3 +1,17 @@
+<script context="module" lang="ts">
+  // Types/Interfaces exported here are available to other modules
+  export interface ExplorerItem {
+    name: string;
+    type: 'directory' | 'file';
+    icon?: any; // Consider a more specific Svelte component type
+    description?: string;
+    url?: string;
+    external?: boolean;
+    path?: string; 
+    children?: Record<string, Omit<ExplorerItem, 'name'>>; // For directory children
+  }
+</script>
+
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { ArrowUp, ExternalLink as ExternalLinkIcon, Folder, FileText as DefaultFileTextIcon } from 'lucide-svelte'; 
@@ -5,19 +19,19 @@
 
   // Using Svelte 5 Runes syntax for props
   let { 
-    fileSystem,
+    fileSystem, // Consider typing this more strictly, e.g., Record<string, ExplorerItem>
     currentPath,
     locale,
     onNavigate = (path: string) => goto(path), // Default value
     breadcrumbs = [], // Default value
     isProjectExplorer = false // Default value
   }: {
-    fileSystem: any;
+    fileSystem: any; // For now, keeping as any to avoid deeper type issues with initial structure
     currentPath: string;
     locale: string;
-    onNavigate?: (path: string) => void; // Optional due to default
-    breadcrumbs?: { name: string, path: string }[]; // Optional due to default
-    isProjectExplorer?: boolean; // Optional due to default
+    onNavigate?: (path: string) => void; 
+    breadcrumbs?: { name: string, path: string }[]; 
+    isProjectExplorer?: boolean; 
   } = $props();
 
   let isMobile = false;
@@ -37,34 +51,83 @@
     };
   });
 
-  function getCurrentDirContent() {
+  function getCurrentDirContent(): ExplorerItem[] {
     const pathWithoutLocale = currentPath.replace(`/${locale}`, '') || '/';
-    let current = fileSystem[pathWithoutLocale] || fileSystem['/']; 
-    
-    if (fileSystem[currentPath]) {
-        current = fileSystem[currentPath];
-    } else {
-        const segments = pathWithoutLocale.split('/').filter(segment => segment.length > 0);
-        current = fileSystem['/']; 
-        for (const segment of segments) {
-            if (current && current.children && current.children[segment]) {
-                current = current.children[segment];
-            } else {
-                return []; 
-            }
-        }
-    }
+    let currentDirData: ExplorerItem | undefined;
 
-    if (current && current.type === 'directory') {
-      return Object.entries(current.children || {}).map(([name, info]) => ({
-        name,
-        ...info
-      }));
+    // Navigate the fileSystem to find the current directory's data
+    const segments = pathWithoutLocale.split('/').filter(Boolean);
+    let tempCurrent = fileSystem['/'] as ExplorerItem;
+    if (!tempCurrent) return []; // Root not found
+
+    for (let i = 0; i < segments.length; i++) {
+      const segment = segments[i];
+      if (tempCurrent.type === 'directory' && tempCurrent.children && tempCurrent.children[segment]) {
+        // Create a full item for the next level before assigning to tempCurrent
+        const childInfo = tempCurrent.children[segment];
+        tempCurrent = {
+            name: segment, 
+            type: childInfo.type,
+            icon: childInfo.icon,
+            description: childInfo.description,
+            url: childInfo.url,
+            external: childInfo.external,
+            path: childInfo.path || (tempCurrent.path ? `${tempCurrent.path}/${segment}` : `/${segment}`),
+            children: childInfo.children
+        } as ExplorerItem;
+      } else {
+        return []; // Path segment not found or not a directory
+      }
+    }
+    currentDirData = tempCurrent;
+
+    if (currentDirData && currentDirData.type === 'directory' && currentDirData.children) {
+      return Object.entries(currentDirData.children).map(([name, info]): ExplorerItem => {
+        const itemPath = info.path || `${currentDirData!.path === '/' ? '' : currentDirData!.path}/${name}`;
+        return {
+          name,
+          type: info.type,
+          icon: info.icon,
+          description: info.description,
+          url: info.url,
+          external: info.external,
+          path: itemPath,
+          children: info.children
+        } as ExplorerItem;
+      });
     }
     return [];
   }
+  
+  function getPathForItem(item: ExplorerItem): string | null {
+    if (item.url && !item.external) return item.url;
+    if (item.type === 'directory') {
+      // Ensure path is absolute and starts with locale if not already included
+      let path = item.path || (currentPath === `/${locale}` ? `/${locale}/${item.name}` : `${currentPath}/${item.name}`);
+      if (!path.startsWith(`/${locale}`)) {
+        path = `/${locale}${path.startsWith('/') ? '' : '/'}${path}`;
+      }
+       // Normalize: remove locale prefix if currentPath already has it for relative construction
+      const baseCurrentPath = currentPath.startsWith(`/${locale}/`) ? currentPath.substring(locale.length + 1) : currentPath;
+      let constructedPath = item.path;
+      if (!constructedPath) {
+          if(baseCurrentPath === '/' || baseCurrentPath === '' || !baseCurrentPath.substring(1).includes(item.name.split('/')[0])){
+            constructedPath = `/${locale}/${item.name}`;
+          } else {
+            constructedPath = `/${locale}${baseCurrentPath}/${item.name}`;
+          }
+      }
+      
+      // Ensure the path for directories like 'about', 'posts' is /locale/item.name
+      if (!item.url && (item.name === 'about' || item.name === 'contact' || item.name === 'projects' || item.name === 'posts')) {
+        return `/${locale}/${item.name}`;
+      }
+      return constructedPath;
+    }
+    return item.url || null; // Return explicit URL for files if available
+  }
 
-  function handleClick(item: any) {
+  function handleClick(item: ExplorerItem) {
     if (item.type === 'directory') {
       onNavigate(item.path || `${currentPath}/${item.name}`);
     } else if (item.type === 'file' && item.url) {
@@ -120,31 +183,84 @@
         </div>
       </div>
     {/if}
-    {#each getCurrentDirContent() as item (item)}
-      <div class="directory-item {item.type}" role="button" tabindex="0" aria-label={`Open ${item.name}`}
-        onclick={() => handleClick(item)}
-        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(item); }}>
-        <span class="item-icon">
-          {#if item.icon}
-            <item.icon/>
-          {:else}
-            {#if item.type === 'directory'}
+    {#each getCurrentDirContent() as item (item.name)}
+      {@const targetPath = getPathForItem(item)}
+
+      {#if targetPath && !item.external}
+        <a href={targetPath}
+           class="directory-item {item.type}"
+           role="link"
+           aria-label={`Navigate to ${item.name}`}
+           data-sveltekit-preload-data="hover"
+           onclick={(e) => { e.preventDefault(); handleClick(item); }}>
+          <span class="item-icon">
+            {#if item.icon}
+              <svelte:component this={item.icon} />
+            {:else if item.type === 'directory'}
               <Folder size={18} />
             {:else}
               <DefaultFileTextIcon size={18} />
             {/if}
-          {/if}
-          {#if item.external}
-            <ExternalLinkIcon size={14} class="external-link-indicator" />
-          {/if}
-        </span>
-        <div class="item-text-content"> 
-            <span class="item-name">{item.name}{item.type === 'directory' && !isProjectExplorer ? '/' : ''}</span>
-            {#if item.description} 
-                <span class="item-description">{item.description}</span>
+            {#if item.external}
+              <ExternalLinkIcon size={14} class="external-link-indicator" />
             {/if}
+          </span>
+          <div class="item-text-content">
+            <span class="item-name">{item.name}{item.type === 'directory' && !isProjectExplorer ? '/' : ''}</span>
+            {#if item.description}
+              <span class="item-description">{item.description}</span>
+            {/if}
+          </div>
+        </a>
+      {:else if item.url && item.external}
+        <a href={item.url}
+           target="_blank"
+           rel="noopener noreferrer"
+           class="directory-item {item.type}"
+           role="link"
+           aria-label={`Open ${item.name} (external link)`}>
+          <span class="item-icon">
+            {#if item.icon}
+              <svelte:component this={item.icon} />
+            {:else if item.type === 'directory'}
+              <Folder size={18} />
+            {:else}
+              <DefaultFileTextIcon size={18} />
+            {/if}
+            <ExternalLinkIcon size={14} class="external-link-indicator" />
+          </span>
+          <div class="item-text-content">
+            <span class="item-name">{item.name}</span>
+            {#if item.description}
+              <span class="item-description">{item.description}</span>
+            {/if}
+          </div>
+        </a>
+      {:else}
+        <div class="directory-item {item.type} non-navigable"
+             role="button" tabindex="0" aria-label={`Open ${item.name}`}
+             onclick={() => handleClick(item)}
+             onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(item); }}>
+          <span class="item-icon">
+            {#if item.icon}
+              <svelte:component this={item.icon} />
+            {:else if item.type === 'directory'}
+              <Folder size={18} />
+            {:else}
+              <DefaultFileTextIcon size={18} />
+            {/if}
+            {#if item.external}
+              <ExternalLinkIcon size={14} class="external-link-indicator" />
+            {/if}
+          </span>
+          <div class="item-text-content">
+            <span class="item-name">{item.name}{item.type === 'directory' && !isProjectExplorer ? '/' : ''}</span>
+            {#if item.description}
+              <span class="item-description">{item.description}</span>
+            {/if}
+          </div>
         </div>
-      </div>
+      {/if}
     {/each}
   </div>
 </div>
