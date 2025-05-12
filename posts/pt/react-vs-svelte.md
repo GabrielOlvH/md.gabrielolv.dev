@@ -147,5 +147,3 @@ A **verdadeira razão pela qual continuei com SvelteKit foi simples: eu estava c
 Então, React + Next.js ou Svelte 5 + SvelteKit? Como em todas as coisas, nada será "melhor" o tempo todo. React e Next.js são potências da indústria, incríveis para coisas grandes e complexas. Mas Svelte e SvelteKit são uma opção super empolgante e moderna, especialmente se você se importa com desempenho de ponta e, bem, você pode contribuir para o pequeno ecossistema! Crie seus próprios pacotes para preencher lacunas que ainda existem!
 
 Para o meu portfólio, a mudança não foi sobre perseguir ganhos minúsculos de velocidade. Foi sobre **a diversão de explorar algo novo que eu tinha visto bombar no Twitter.** Isso me tirou da minha zona de conforto, me ensinou uma maneira diferente de pensar sobre desenvolvimento web e adicionou outra ferramenta legal ao meu arsenal. E isso, para mim, valeu totalmente a pena. Se você está curioso sobre Svelte, experimente! A jornada de aprendizado em si já é uma recompensa e tanto.
-
-***
